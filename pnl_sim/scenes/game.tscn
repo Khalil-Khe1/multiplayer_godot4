@@ -1,0 +1,358 @@
+[gd_scene load_steps=7 format=3 uid="uid://diq1m6b8dbkts"]
+
+[ext_resource type="Texture2D" uid="uid://lbo5ywx06662" path="res://pnlsim_board.png" id="1_77oa0"]
+[ext_resource type="Script" path="res://scripts/server.gd" id="1_gicwe"]
+[ext_resource type="Texture2D" uid="uid://cw0jjtykb227" path="res://resources/dice/d1.png" id="2_5lb6x"]
+[ext_resource type="Texture2D" uid="uid://pct0rtk2wkjx" path="res://resources/dice/d2.png" id="3_kajnb"]
+[ext_resource type="Script" path="res://scripts/game_controller.gd" id="4_8r5b8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jj1ib"]
+albedo_texture = ExtResource("1_77oa0")
+
+[node name="server" type="Node3D"]
+script = ExtResource("1_gicwe")
+
+[node name="control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="control"]
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 540.0
+
+[node name="menu" type="Control" parent="control/Panel"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="labels" type="Control" parent="control/Panel/menu"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="name_label" type="RichTextLabel" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 54.0
+offset_right = 170.0
+offset_bottom = 94.0
+text = "NAME
+"
+metadata/_edit_use_anchors_ = true
+
+[node name="name" type="TextEdit" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 67.0
+offset_top = 90.0
+offset_right = 187.0
+offset_bottom = 140.0
+placeholder_text = "name..."
+metadata/_edit_use_anchors_ = true
+
+[node name="add_label" type="RichTextLabel" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 87.0
+offset_top = 166.0
+offset_right = 167.0
+offset_bottom = 206.0
+text = "ADDRESS"
+metadata/_edit_use_anchors_ = true
+
+[node name="address" type="TextEdit" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 202.0
+offset_right = 184.0
+offset_bottom = 252.0
+text = "LOCALHOST"
+placeholder_text = "address..."
+metadata/_edit_use_anchors_ = true
+
+[node name="port_label" type="RichTextLabel" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 271.0
+offset_right = 175.0
+offset_bottom = 311.0
+text = "PORT"
+metadata/_edit_use_anchors_ = true
+
+[node name="port" type="TextEdit" parent="control/Panel/menu/labels"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 313.0
+offset_right = 186.0
+offset_bottom = 363.0
+text = "3342"
+placeholder_text = "port..."
+metadata/_edit_use_anchors_ = true
+
+[node name="buttons" type="Control" parent="control/Panel/menu"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="join" type="Button" parent="control/Panel/menu/buttons"]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 385.0
+offset_right = 172.0
+offset_bottom = 416.0
+text = "CONNECT"
+metadata/_edit_use_anchors_ = true
+
+[node name="host" type="Button" parent="control/Panel/menu/buttons"]
+layout_mode = 0
+offset_left = 106.0
+offset_top = 437.0
+offset_right = 157.0
+offset_bottom = 468.0
+text = "HOST"
+metadata/_edit_use_anchors_ = true
+
+[node name="host2" type="Button" parent="control/Panel/menu/buttons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.3
+anchor_bottom = 1.3
+offset_left = 106.0
+offset_top = 437.0
+offset_right = 157.0
+offset_bottom = 468.0
+text = "ttt"
+metadata/_edit_use_anchors_ = true
+
+[node name="lobby" type="Control" parent="control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="control/lobby"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 224.0
+offset_right = 590.0
+offset_bottom = 264.0
+scale = Vector2(1.656, 1.656)
+text = "WAITING FOR PLAYERS"
+
+[node name="start" type="Button" parent="control/lobby"]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 379.0
+offset_right = 560.0
+offset_bottom = 410.0
+text = "START"
+
+[node name="game_ui" type="Control" parent="control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="navbar" type="Panel" parent="control/game_ui"]
+layout_mode = 0
+offset_right = 1180.0
+offset_bottom = 80.0
+
+[node name="dirty" type="Control" parent="control/game_ui/navbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 38.0
+offset_right = 78.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/dirty"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 119.0
+offset_bottom = 40.0
+text = "dirty money"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/dirty"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "$300"
+
+[node name="clean" type="Control" parent="control/game_ui/navbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 174.0
+offset_right = 214.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/clean"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 119.0
+offset_bottom = 40.0
+text = "clean money"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/clean"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "$$0"
+
+[node name="ients-clit" type="Control" parent="control/game_ui/navbar"]
+anchors_preset = 0
+offset_left = 329.0
+offset_right = 369.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/ients-clit"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 79.0
+offset_bottom = 40.0
+text = "ients-clit"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/ients-clit"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "30k"
+
+[node name="firearms" type="Control" parent="control/game_ui/navbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 482.0
+offset_right = 522.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/firearms"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 79.0
+offset_bottom = 40.0
+text = "firearms"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/firearms"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "30k"
+
+[node name="leshit" type="Control" parent="control/game_ui/navbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 621.0
+offset_right = 661.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/leshit"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 79.0
+offset_bottom = 40.0
+text = "'euh"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/leshit"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "33.1 kg"
+
+[node name="yayo" type="Control" parent="control/game_ui/navbar"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 739.0
+offset_right = 779.0
+offset_bottom = 40.0
+
+[node name="name" type="RichTextLabel" parent="control/game_ui/navbar/yayo"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 79.0
+offset_bottom = 40.0
+text = "YAYO"
+
+[node name="data" type="RichTextLabel" parent="control/game_ui/navbar/yayo"]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 80.0
+offset_bottom = 70.0
+text = "18 kg"
+
+[node name="roll_panel" type="Panel" parent="control/game_ui"]
+layout_mode = 0
+offset_left = 1000.0
+offset_top = 493.0
+offset_right = 1120.0
+offset_bottom = 613.0
+
+[node name="D1" type="Sprite2D" parent="control/game_ui/roll_panel"]
+position = Vector2(28.9998, 92.9999)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_5lb6x")
+
+[node name="D2" type="Sprite2D" parent="control/game_ui/roll_panel"]
+position = Vector2(88, 93)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_kajnb")
+
+[node name="move" type="Button" parent="control/game_ui/roll_panel"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = -4.0
+offset_right = 88.0
+offset_bottom = 27.0
+text = "MOVE"
+
+[node name="roll" type="Button" parent="control/game_ui/roll_panel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 32.0
+offset_right = 85.0
+offset_bottom = 63.0
+text = "ROLL"
+
+[node name="howmuch" type="TextEdit" parent="control/game_ui/roll_panel"]
+layout_mode = 0
+offset_left = 27.0
+offset_top = -89.0
+offset_right = 87.0
+offset_bottom = -19.0
+placeholder_text = "roll..."
+
+[node name="leaderboard" type="Panel" parent="control/game_ui"]
+layout_mode = 0
+offset_left = 883.0
+offset_top = 106.0
+offset_right = 1133.0
+offset_bottom = 146.0
+
+[node name="gamescene" type="Node3D" parent="."]
+script = ExtResource("4_8r5b8")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="gamescene"]
+transform = Transform3D(-1.494, 0, 0, 0, -1.494, 0, 0, 0, -1.494, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_jj1ib")
+
+[node name="Players" type="Node" parent="gamescene"]
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="gamescene"]
+transform = Transform3D(0.016, 0, 0, 0, 0.08, 0, 0, 0, 0.016, -0.643904, 0.5, 0.645147)
+size = Vector3(1, 0.002, 1)
+
+[node name="Camera3D" type="Camera3D" parent="gamescene"]
+transform = Transform3D(-4.04199e-08, 0.380699, -0.924699, 1.66409e-08, 0.924699, 0.380699, 1, 1.77636e-15, -4.37114e-08, -1.43244, 1.71854, 0.0639362)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="gamescene"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010273, 1.75918, 0)
+
+[connection signal="pressed" from="control/Panel/menu/buttons/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="control/Panel/menu/buttons/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="control/Panel/menu/buttons/host2" to="." method="_on_host_2_pressed"]
+[connection signal="pressed" from="control/lobby/start" to="gamescene" method="_on_start_pressed"]
+[connection signal="pressed" from="control/game_ui/roll_panel/move" to="gamescene" method="_on_move_pressed"]
+[connection signal="pressed" from="control/game_ui/roll_panel/roll" to="gamescene" method="_on_roll_pressed"]
