@@ -2,6 +2,8 @@ extends Node
 
 enum gameStates {NEWTURN, ROLL, MOVE, ACTION}
 
+const step : float = -0.12
+
 var seed : String
 var dice : Array
 var roll : int
@@ -24,7 +26,8 @@ func load_resources():
 	load_dice()
 
 func load_players():
-	print(self.get_node("Players").get_children())
+	for c in self.get_node("Players").get_children():
+		players.append(c)
 
 func load_dice():
 	for i in 6:
@@ -40,7 +43,23 @@ func _on_move_pressed():
 	if(howmuch == 0):
 		print("xdd")
 		return
-	
+	var s : Vector3 = Vector3(0, 0, 0)
+	for i in howmuch:
+		print(range(0, 9))
+		if(players[0].square in range(0, 10)):
+			s = Vector3(0, 0, 1)
+		if(players[0].square in range(10, 20)):
+			s = Vector3(-1, 0, 0)
+		if(players[0].square in range(20, 30)):
+			s = Vector3(0, 0, -1)
+		if(players[0].square in range(30, 40)):
+			s = Vector3(1, 0, 0)
+		players[0].position = players[0].position + (s * step)
+		players[0].square = players[0].square + 1
+		if(players[0].square > 39):
+			players[0].square = 0
+		print(players[0].position, "   ", players[0].square)
+		await get_tree().create_timer(0.4).timeout
 
 func _on_roll_pressed():
 	var rng = RandomNumberGenerator.new()
