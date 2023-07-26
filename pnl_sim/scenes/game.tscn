@@ -20,6 +20,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Panel" type="Panel" parent="control"]
+visible = false
 layout_mode = 0
 offset_right = 260.0
 offset_bottom = 540.0
@@ -127,6 +128,7 @@ text = "ttt"
 metadata/_edit_use_anchors_ = true
 
 [node name="lobby" type="Control" parent="control"]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -325,6 +327,14 @@ offset_right = 87.0
 offset_bottom = -19.0
 placeholder_text = "roll..."
 
+[node name="generate" type="Button" parent="control/game_ui/roll_panel"]
+layout_mode = 0
+offset_left = -64.0
+offset_top = -40.0
+offset_right = 14.0
+offset_bottom = -9.0
+text = "generate"
+
 [node name="leaderboard" type="Panel" parent="control/game_ui"]
 layout_mode = 0
 offset_left = 883.0
@@ -360,3 +370,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010273, 1.75918, 0)
 [connection signal="pressed" from="control/lobby/start" to="gamescene" method="_on_start_pressed"]
 [connection signal="pressed" from="control/game_ui/roll_panel/move" to="gamescene" method="_on_move_pressed"]
 [connection signal="pressed" from="control/game_ui/roll_panel/roll" to="gamescene" method="_on_roll_pressed"]
+[connection signal="pressed" from="control/game_ui/roll_panel/generate" to="gamescene" method="_on_generate_pressed"]

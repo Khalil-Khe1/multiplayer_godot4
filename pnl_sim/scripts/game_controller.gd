@@ -10,6 +10,7 @@ var roll : int
 var turn : int = 0
 var players : Array
 var buttons : Dictionary
+var shares : Shares
 
 func _set_turn(value): #FIGURE OUT GODOT 4 SETGET IMPLEMENTATION
 	print("turn set to ", value)
@@ -24,6 +25,8 @@ func _ready():
 func load_resources():
 	load_players()
 	load_dice()
+	load_lands()
+	setup_ui_navbar()
 
 func load_players():
 	for c in self.get_node("Players").get_children():
@@ -37,6 +40,13 @@ func load_dice():
 func load_buttons():
 	buttons["roll"] = self.get_parent().get_node("control/game_ui/roll_panel/roll")
 	buttons["move"] = self.get_parent().get_node("control/game_ui/roll_panel/move")
+
+func load_lands():
+	shares = load("res://scripts/shares.gd").new()
+
+func setup_ui_navbar():
+	for p in players:
+		p.init_navbar()
 
 func _on_move_pressed():
 	var howmuch : int = int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text)
@@ -89,3 +99,10 @@ func sync_roll(r1 : int, r2 :int):
 	set_dice(2, r2)
 	self.get_parent().get_node("control/game_ui/roll_panel/howmuch").set_text(r1 + r2)
 
+func test_lands():
+	shares.assign_share(players[0], 1, shares.get_land(1))
+	shares.assign_share(players[0], 0.6, shares.get_land(3))
+	shares.assign_share(players[0], 0.4, shares.get_land(3))
+
+func _on_generate_pressed():
+	pass # Replace with function body.
