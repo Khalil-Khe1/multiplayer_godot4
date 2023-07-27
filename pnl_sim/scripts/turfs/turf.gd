@@ -29,7 +29,7 @@ func get_land_name():
 	return self.land_name
 
 func get_owners():
-	return shares
+	return self.shares
 
 func set_land_owner(player : Player):
 	self.land_owner = player
@@ -39,6 +39,9 @@ func get_available_share() -> float:
 	for k in shares.keys():
 		rest = rest - shares[k]
 	return rest
+
+func get_resources():
+	return self.resources
 
 func prepare(): #called before generate
 	pass
@@ -58,4 +61,9 @@ func generate(): #called on new round
 		return
 	for k in resources.keys():
 		resources[k][0] = resources[k][0] + resources[k][1]
-		#supply_shares(k, resources[k][1]) #work on shares inside the player's class
+		supply_shares(k, resources[k][1])
+
+func supply_shares(res : String, value : float):
+	for s in shares:
+		var your_share : float = shares[s] * value
+		s.append_resource(res, your_share) 

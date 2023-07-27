@@ -89,6 +89,7 @@ func _on_start_pressed():
 	server.get_node("control/lobby").set_visible(false)
 	server.get_node("control/game_ui").set_visible(true)
 	load_resources()
+	test_lands()
 
 func set_dice(n : int, roll : int):
 	self.get_parent().get_node("control/game_ui/roll_panel/D" + str(n)).set_texture(dice[roll])
@@ -100,9 +101,11 @@ func sync_roll(r1 : int, r2 :int):
 	self.get_parent().get_node("control/game_ui/roll_panel/howmuch").set_text(r1 + r2)
 
 func test_lands():
-	shares.assign_share(players[0], 1, shares.get_land(1))
-	shares.assign_share(players[0], 0.6, shares.get_land(3))
-	shares.assign_share(players[0], 0.4, shares.get_land(3))
+	shares.assign_share(players[1], 1, shares.find(1))
+	shares.assign_share(players[0], 0.6, shares.find(3))
+	shares.assign_share(players[1], 0.4, shares.find(3))
+	print(players[0])
 
 func _on_generate_pressed():
-	pass # Replace with function body.
+	shares.find(1).generate()
+	shares.find(3).generate()

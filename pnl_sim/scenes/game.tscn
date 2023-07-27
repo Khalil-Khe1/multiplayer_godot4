@@ -351,7 +351,7 @@ material_override = SubResource("StandardMaterial3D_jj1ib")
 
 [node name="Players" type="Node" parent="gamescene"]
 
-[node name="CSGBox3D" parent="gamescene/Players" instance=ExtResource("6_oqe1g")]
+[node name="default" parent="gamescene/Players" instance=ExtResource("6_oqe1g")]
 transform = Transform3D(0.016, 0, 0, 0, 0.08, 0, 0, 0, 0.016, -0.582338, 0.801398, 0.569104)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="gamescene"]

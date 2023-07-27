@@ -47,6 +47,13 @@ func update_navbar(res_name : String, value : float):
 
 func append_resource(res_name : String, value : float):
 	resources[res_name] = resources[res_name] + value
+	if(player_id == multiplayer.get_unique_id()):
+		update_navbar(res_name, resources[res_name])
+
+func deplete_resource(res_name : String, value : float):
+	resources[res_name] = resources[res_name] - value
+	if(player_id == multiplayer.get_unique_id()):
+		update_navbar(res_name, resources[res_name])
 
 func print_self():
 	print(self.player_id)
