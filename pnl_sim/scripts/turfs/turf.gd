@@ -2,21 +2,27 @@ extends Node
 
 class_name Turf
 
+#general
 var land_name : String = "Turf"
+var description : String
+var color : Color
 
+#stats
 var square : int
 var price : float
 var resources : Dictionary
 
+#shares system
 var land_owner : Player
 var shares : Dictionary
 
-
+#per turn status
 var can_generate : bool = true
 var frozen_turns : int
 
 func _init():
 	square = -1
+	description = ""
 	resources = {}
 	price = 0
 	frozen_turns = 0
