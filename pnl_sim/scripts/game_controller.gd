@@ -1,20 +1,61 @@
 extends Node
 
-enum gameStates {NEWTURN, ROLL, MOVE, ACTION}
+enum gameStates {NEWTURN, ROLL, MOVE, ACTION, ENDTURN}
 
 const step : float = -0.12
 
-var seed : String
-var dice : Array
-var roll : int
+#GAME STATE
+var gameState : gameStates
 var turn : int = 0
-var players : Array
+
+#rng
+var seed : String
+var roll : int
+
+#UI
+var dice : Array
 var buttons : Dictionary
+var panels : Dictionary
+
+#PLAYERS
+var players : Array
 var shares : Shares
 
-func _set_turn(value): #FIGURE OUT GODOT 4 SETGET IMPLEMENTATION
-	print("turn set to ", value)
-	turn = value
+func increment_turn():
+	turn = turn + 1
+	if(turn >= players.size()):
+		turn = 0
+#		for l in shares.list_all():
+#			l.generate()
+	#GENERATE NEEDS RPC TESTING
+	rpc("sync_turn", turn)
+
+@rpc("any_peer")
+func sync_turn(t : int):
+	print(multiplayer.get_unique_id())
+	turn = t
+	for p in players:
+		if(multiplayer.get_unique_id() == p.get_id()):
+			if(turn == p.get_order()):
+				set_game_state(gameStates.NEWTURN)
+
+func set_game_state(value : gameStates):
+	gameState = value
+	var keywords : Array
+	match(gameState):
+		gameStates.NEWTURN:
+			pass
+		gameStates.ROLL:
+			keywords.append("roll")
+			hide_unhide_ui(keywords)
+		gameStates.MOVE:
+			pass
+		gameStates.ACTION:
+			keywords.append("gameplay")
+			hide_unhide_ui(keywords)
+		gameStates.ENDTURN:
+			hide_unhide_ui(keywords)
+			increment_turn()
 
 func _input(event):
 	pass
@@ -23,14 +64,45 @@ func _ready():
 	pass
 
 func load_resources():
-	load_players()
 	load_dice()
 	load_lands()
 	setup_ui_navbar()
 
+@rpc("any_peer")
+func rpc_load_resources():
+	load_resources()
+
 func load_players():
+	var order : int = 0
 	for c in self.get_node("Players").get_children():
+		c.set_order(order)
+		order = order + 1
 		players.append(c)
+
+func temp_players() -> Dictionary:
+	var tmp_array : Dictionary = {}
+	for p in players:
+		tmp_array[p.get_id()] = p.get_order()
+	return tmp_array
+
+func sync_peers_on_init():
+	var tmp = temp_players()
+	for p in players:
+		if(p.get_id() != 1):
+			rpc_id(p.get_id(), "sync_players", tmp)
+			rpc_id(p.get_id(), "rpc_load_resources")
+
+@rpc("any_peer")
+func sync_players(players_array : Dictionary):
+	var local_players : Array = self.get_node("Players").get_children()
+	for p in local_players:
+		for rp in players_array.keys():
+			if(p.get_id() == rp):
+				p.set_order(players_array[rp])
+				break
+	for p in local_players:
+		p.print_self()
+		
 
 func load_dice():
 	for i in 6:
@@ -41,6 +113,10 @@ func load_buttons():
 	buttons["roll"] = self.get_parent().get_node("control/game_ui/roll_panel/roll")
 	buttons["move"] = self.get_parent().get_node("control/game_ui/roll_panel/move")
 
+func load_panels():
+	panels["roll"] = self.get_parent().get_node("control/game_ui/roll_panel")
+	panels["gameplay"] = self.get_parent().get_node("contolr/game_ui/gameplay_panel")
+
 func load_lands():
 	shares = load("res://scripts/shares.gd").new()
 
@@ -48,14 +124,19 @@ func setup_ui_navbar():
 	for p in players:
 		p.init_navbar()
 
+func hide_unhide_ui(keywords : Array):
+	for k in panels.keys():
+		if k in keywords:
+			panels[k].set_visible(true)
+		else:
+			panels[k].set_visible(false)
+
 func _on_move_pressed():
 	var howmuch : int = int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text)
 	if(howmuch == 0):
-		print("xdd")
 		return
 	var s : Vector3 = Vector3(0, 0, 0)
 	for i in howmuch:
-		print(range(0, 9))
 		if(players[0].square in range(0, 10)):
 			s = Vector3(0, 0, 1)
 		if(players[0].square in range(10, 20)):
@@ -68,7 +149,7 @@ func _on_move_pressed():
 		players[0].square = players[0].square + 1
 		if(players[0].square > 39):
 			players[0].square = 0
-		print(players[0].position, "   ", players[0].square)
+		#print(players[0].position, "   ", players[0].square)
 		await get_tree().create_timer(0.4).timeout
 
 func _on_roll_pressed():
@@ -88,7 +169,9 @@ func _on_start_pressed():
 	var server  = self.get_parent()
 	server.get_node("control/lobby").set_visible(false)
 	server.get_node("control/game_ui").set_visible(true)
+	load_players()
 	load_resources()
+	sync_peers_on_init()
 	test_lands()
 
 func set_dice(n : int, roll : int):
@@ -104,8 +187,11 @@ func test_lands():
 	shares.assign_share(players[1], 1, shares.find(1))
 	shares.assign_share(players[0], 0.6, shares.find(3))
 	shares.assign_share(players[1], 0.4, shares.find(3))
-	print(players[0])
 
 func _on_generate_pressed():
 	shares.find(1).generate()
 	shares.find(3).generate()
+
+
+func _on_end_turn_pressed():
+	set_game_state(gameStates.ENDTURN)

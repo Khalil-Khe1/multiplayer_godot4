@@ -20,6 +20,15 @@ var resources : Dictionary = {
 func _init():
 	square = 0
 
+func get_id():
+	return self.player_id
+
+func get_order():
+	return self.order
+
+func set_order(o : int):
+	self.order = o
+
 func init_navbar():
 	var navbar = get_tree().get_root().get_node("server/control/game_ui/navbar")
 	for k in resources:
@@ -56,7 +65,7 @@ func deplete_resource(res_name : String, value : float):
 		update_navbar(res_name, resources[res_name])
 
 func print_self():
-	print(self.player_id)
-	print(self.player_name)
-	print(self.order)
-	print("OUT")
+	print("ID: ", self.player_id)
+	print("NAME: ", self.player_name)
+	print("ORDER: ", self.order)
+	print("-------------------------------")

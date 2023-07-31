@@ -10,7 +10,7 @@ func _init():
 	for f in dir.get_files():
 		var land_instance = load(path + "/" + f).new()
 		lands.append(land_instance)
-	print(lands)
+	#print(lands)
 
 func find(square : int):
 	for l in lands:

@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://diq1m6b8dbkts"]
+[gd_scene load_steps=8 format=3 uid="uid://diq1m6b8dbkts"]
 
 [ext_resource type="Texture2D" uid="uid://lbo5ywx06662" path="res://pnlsim_board.png" id="1_77oa0"]
 [ext_resource type="Script" path="res://scripts/server.gd" id="1_gicwe"]
 [ext_resource type="Texture2D" uid="uid://cw0jjtykb227" path="res://resources/dice/d1.png" id="2_5lb6x"]
 [ext_resource type="Texture2D" uid="uid://pct0rtk2wkjx" path="res://resources/dice/d2.png" id="3_kajnb"]
 [ext_resource type="Script" path="res://scripts/game_controller.gd" id="4_8r5b8"]
-[ext_resource type="PackedScene" uid="uid://nni8c00g2swu" path="res://scenes/player.tscn" id="6_oqe1g"]
 
 [sub_resource type="Theme" id="Theme_xa2on"]
 default_font_size = 35
@@ -386,9 +385,6 @@ material_override = SubResource("StandardMaterial3D_jj1ib")
 
 [node name="Players" type="Node" parent="gamescene"]
 
-[node name="default" parent="gamescene/Players" instance=ExtResource("6_oqe1g")]
-transform = Transform3D(0.016, 0, 0, 0, 0.08, 0, 0, 0, 0.016, -0.582338, 0.801398, 0.569104)
-
 [node name="CSGBox3D2" type="CSGBox3D" parent="gamescene"]
 transform = Transform3D(0.016, 0, 0, 0, 0.08, 0, 0, 0, 0.016, -0.643904, 0.5, 0.645147)
 size = Vector3(1, 0.002, 1)
@@ -406,3 +402,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010273, 1.75918, 0)
 [connection signal="pressed" from="control/game_ui/roll_panel/move" to="gamescene" method="_on_move_pressed"]
 [connection signal="pressed" from="control/game_ui/roll_panel/roll" to="gamescene" method="_on_roll_pressed"]
 [connection signal="pressed" from="control/game_ui/roll_panel/generate" to="gamescene" method="_on_generate_pressed"]
+[connection signal="pressed" from="control/game_ui/gameplay_panel/end_turn" to="gamescene" method="_on_end_turn_pressed"]

@@ -7,7 +7,6 @@ const STEP = 0.2
 
 var peer = ENetMultiplayerPeer.new()
 var connected_peers = []
-var order : int = 0
 
 var dice : Array
 
@@ -34,7 +33,6 @@ func _on_host_pressed():
 	peer.peer_connected.connect(
 		func(new_peer_id):
 			await get_tree().create_timer(1).timeout
-			rpc("set_order", order + 1)
 			rpc("add_connected_players", new_peer_id)
 			rpc_id(new_peer_id, "add_previous_players", connected_peers)
 			add_player(new_peer_id)
@@ -59,14 +57,13 @@ func _on_join_pressed():
 
 func add_player(peer_id):
 	connected_peers.append(peer_id)
-	var player_name = "PLAYER" + str(order)
+	var player_name = "PLAYER"
 	if($control/Panel/menu/labels/name.text):
 		player_name = str($control/Panel/menu/labels/name.text)
 	var player = preload("res://scenes/player.tscn").instantiate()
 	player.position = SPAWN_POS
 	player.player_name = player_name
 	player.player_id = peer_id
-	#player.order = order
 	self.get_node("gamescene/Players").add_child(player)
 	#player.print_self()
 
@@ -79,11 +76,6 @@ func add_connected_players(new_peer_id):
 func add_previous_players(peers):
 	for id in peers:
 		add_player(id)
-
-@rpc
-func set_order(o):
-	order = o
-	#print("ORDER ", order)
 
 @rpc("any_peer")
 func flip_bool(t):
