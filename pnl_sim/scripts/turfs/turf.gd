@@ -6,6 +6,9 @@ class_name Turf
 var land_name : String = "Turf"
 var description : String
 var color : Color
+var image : Sprite2D
+var video : VideoStream
+var buttons : Array
 
 #stats
 var square : int
@@ -22,10 +25,13 @@ var frozen_turns : int
 
 func _init():
 	square = -1
-	description = ""
 	resources = {}
 	price = 0
 	frozen_turns = 0
+	image = null
+	video.set_file("")
+	generate_description()
+	buttons = []
 
 #Setget
 func get_square():
@@ -36,6 +42,32 @@ func get_land_name():
 
 func get_owners():
 	return self.shares
+
+func get_color():
+	return self.color
+
+func get_image():
+	return self.image
+
+func get_video():
+	return self.video
+
+func get_buttons():
+	return self.buttons
+
+func get_description():
+	return self.description
+
+func generate_description():
+	var text : String = ""
+	if(!resources.is_empty()):
+		text = "This land generates:\n"
+		for k in resources.keys():
+			text = text + "- " + resources[k][1] + " " + k + "\n"
+	self.description = text
+
+func get_land_owner():
+	return self.land_owner
 
 func set_land_owner(player : Player):
 	self.land_owner = player
@@ -49,6 +81,19 @@ func get_available_share() -> float:
 func get_resources():
 	return self.resources
 
+func set_buttons_generic():
+	var interactions : Array = ["Contest", "Purchase", "Build"]
+	for i in interactions:
+		var b = Button.new()
+		b.set_text(i)
+		b.set_action_mode(0)
+		b.get_pressed().connect(self.some_methode())
+		buttons.append(b)
+
+func some_methode():
+	pass
+
+#gameplay functions
 func prepare(): #called before generate
 	pass
 

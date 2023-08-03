@@ -5,3 +5,4 @@ func _init():
 	square = 14
 	resources = {"ients-clit" : [0, 12]}
 	price = 0
+	color = Color(217, 58, 150)

@@ -68,6 +68,14 @@ func _input(event):
 func _ready():
 	pass
 
+func ui_init():
+	var server  = self.get_parent()
+	server.get_node("control/lobby").set_visible(false)
+	server.get_node("control/game_ui").set_visible(true)
+	server.get_node("control/game_ui/roll_panel").set_visible(true)
+	server.get_node("control/game_ui/gameplay_panel").set_visible(false)
+	server.get_node("control/game_ui/land_panel").set_visible(false)
+
 func load_resources():
 	load_dice()
 	load_lands()
@@ -122,6 +130,7 @@ func load_buttons():
 func load_panels():
 	panels["roll"] = self.get_parent().get_node("control/game_ui/roll_panel")
 	panels["gameplay"] = self.get_parent().get_node("control/game_ui/gameplay_panel")
+	panels["land"] = self.get_parent().get_node("control/game_ui/land_panel")
 
 func load_lands():
 	shares = load("res://scripts/shares.gd").new()
@@ -146,18 +155,18 @@ func _on_move_pressed():
 		return
 	var s : Vector3 = Vector3(0, 0, 0)
 	for i in howmuch:
-		if(players[0].square in range(0, 10)):
+		if(players[turn].get_square() in range(0, 10)):
 			s = Vector3(0, 0, 1)
-		if(players[0].square in range(10, 20)):
+		if(players[turn].get_square() in range(10, 20)):
 			s = Vector3(-1, 0, 0)
-		if(players[0].square in range(20, 30)):
+		if(players[turn].get_square() in range(20, 30)):
 			s = Vector3(0, 0, -1)
-		if(players[0].square in range(30, 40)):
+		if(players[turn].get_square() in range(30, 40)):
 			s = Vector3(1, 0, 0)
 		players[0].position = players[0].position + (s * step)
-		players[0].square = players[0].square + 1
-		if(players[0].square > 39):
-			players[0].square = 0
+		players[turn].set_square(players[turn].get_square() + 1)
+		if(players[turn].get_square() > 39):
+			players[turn].set_square(0)
 		await get_tree().create_timer(0.4).timeout
 	set_game_state(gameStates.ACTION)
 
@@ -174,11 +183,7 @@ func _on_roll_pressed():
 	self.get_parent().get_node("control/game_ui/roll_panel/howmuch").set_text(str(r1 + r2 + 2))
 
 func _on_start_pressed():
-	var server  = self.get_parent()
-	server.get_node("control/lobby").set_visible(false)
-	server.get_node("control/game_ui").set_visible(true)
-	server.get_node("control/game_ui/roll_panel").set_visible(true)
-	server.get_node("control/game_ui/gameplay_panel").set_visible(false)
+	ui_init()
 	load_players()
 	load_resources()
 	sync_peers_on_init()
@@ -215,3 +220,32 @@ func _on_generate_pressed():
 
 func _on_end_turn_pressed():
 	set_game_state(gameStates.ENDTURN)
+
+
+func _on_land_button_pressed():
+	var keywords : Array = ["land"]
+	hide_unhide_ui(keywords)
+	var current_land = shares.find(players[turn].get_square())
+	var land_ui = panels["land"]
+	var new_style = StyleBoxFlat.new()
+	new_style.set_bg_color(current_land.get_color())
+	new_style.set_draw_center(true)
+	new_style.set_corner_detail(8)
+	land_ui.get_node("square/land_title").set_text(current_land.get_land_name())
+	print(current_land.get_color())
+	land_ui.get_node("square/color").set("theme_override_styles/panel/bg_color", current_land.get_color()) #FIGURE OUT PANEL COLORING
+	#land_ui.get_node("Sprite2D").set_texture(current_land.get_image())
+	land_ui.get_node("misc/description_panel/description").set_text(current_land.get_description())
+	if(current_land.get_video() != null):
+		land_ui.get_node("misc/land_video").set_stream(current_land.get_video())
+	if(!current_land.get_buttons().is_empty()):
+		for b in current_land.get_buttons():
+			if(turn == current_land.get_land_owner().get_order()):
+				if(b.get_text() == "Contest"):
+					continue
+			land_ui.get_node("misc/hbox").add_child(b)
+
+
+func _on_exit_pressed():
+	var keywords : Array = ["gameplay"]
+	hide_unhide_ui(keywords)

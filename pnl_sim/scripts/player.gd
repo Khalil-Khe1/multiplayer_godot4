@@ -29,6 +29,12 @@ func get_order():
 func set_order(o : int):
 	self.order = o
 
+func set_square(s : int):
+	self.square = s
+
+func get_square():
+	return self.square
+
 func init_navbar():
 	var navbar = get_tree().get_root().get_node("server/control/game_ui/navbar")
 	for k in resources:
