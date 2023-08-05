@@ -189,7 +189,6 @@ func _on_start_pressed():
 	sync_peers_on_init()
 	for p in players:
 		p.print_self()
-	#test_lands()
 
 func set_dice(n : int, roll : int):
 	self.get_parent().get_node("control/game_ui/roll_panel/D" + str(n)).set_texture(dice[roll])
@@ -223,27 +222,29 @@ func _on_end_turn_pressed():
 
 
 func _on_land_button_pressed():
+	#declarations
 	var keywords : Array = ["land"]
 	hide_unhide_ui(keywords)
 	var current_land = shares.find(players[turn].get_square())
 	var land_ui = panels["land"]
-	var new_style = StyleBoxFlat.new()
-	new_style.set_bg_color(current_land.get_color())
-	new_style.set_draw_center(true)
-	new_style.set_corner_detail(8)
+	
+	#get and set descriptions
 	land_ui.get_node("square/land_title").set_text(current_land.get_land_name())
-	print(current_land.get_color())
-	land_ui.get_node("square/color").set("theme_override_styles/panel/bg_color", current_land.get_color()) #FIGURE OUT PANEL COLORING
-	#land_ui.get_node("Sprite2D").set_texture(current_land.get_image())
+	land_ui.get_node("square/color").get_theme_stylebox("panel").bg_color = current_land.get_color_raw()
+	land_ui.get_node("Sprite2D").set_texture(current_land.get_image())
 	land_ui.get_node("misc/description_panel/description").set_text(current_land.get_description())
 	if(current_land.get_video() != null):
 		land_ui.get_node("misc/land_video").set_stream(current_land.get_video())
+	
+	#initialize by removing children
+	for c in land_ui.get_node("misc/hbox").get_children():
+		land_ui.get_node("misc/hbox").remove_child(c)
+		c.queue_free()
+	#addind corresponding buttons
+	print(current_land.get_buttons())
 	if(!current_land.get_buttons().is_empty()):
-		for b in current_land.get_buttons():
-			if(turn == current_land.get_land_owner().get_order()):
-				if(b.get_text() == "Contest"):
-					continue
-			land_ui.get_node("misc/hbox").add_child(b)
+		for cb in current_land.get_corresponding_buttons(turn):
+			land_ui.get_node("misc/hbox").add_child(cb)
 
 
 func _on_exit_pressed():

@@ -15,6 +15,7 @@ bg_color = Color(0.955963, 0.955963, 0.955963, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgp5s"]
 bg_color = Color(0.717647, 0, 0, 1)
+corner_detail = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jj1ib"]
 albedo_texture = ExtResource("1_77oa0")
@@ -452,6 +453,7 @@ text = "Purchase"
 
 [node name="description_panel" type="Panel" parent="control/game_ui/land_panel/misc"]
 visible = false
+layout_mode = 0
 offset_top = 1.0
 offset_right = 400.0
 offset_bottom = 351.0
