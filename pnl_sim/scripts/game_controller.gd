@@ -2,6 +2,8 @@ extends Node
 
 enum gameStates {NEWTURN, ROLL, MOVE, ACTION, ENDTURN}
 
+var interactions : Array = ["Purchase"]
+
 const step : float = -0.12
 
 #GAME STATE
@@ -14,7 +16,6 @@ var roll : int
 
 #UI
 var dice : Array
-var buttons : Dictionary
 var panels : Dictionary
 
 #PLAYERS
@@ -123,14 +124,11 @@ func load_dice():
 		var texture : Texture = load("res://resources/dice/d" + str(i+1) + ".png")
 		dice.append(texture)
 
-func load_buttons():
-	buttons["roll"] = self.get_parent().get_node("control/game_ui/roll_panel/roll")
-	buttons["move"] = self.get_parent().get_node("control/game_ui/roll_panel/move")
-
 func load_panels():
 	panels["roll"] = self.get_parent().get_node("control/game_ui/roll_panel")
 	panels["gameplay"] = self.get_parent().get_node("control/game_ui/gameplay_panel")
 	panels["land"] = self.get_parent().get_node("control/game_ui/land_panel")
+	panels["land"].position = Vector2(175, 105)
 
 func load_lands():
 	shares = load("res://scripts/shares.gd").new()
@@ -207,16 +205,6 @@ func sync_roll(r1 : int, r2 :int):
 	set_dice(2, r2)
 	self.get_parent().get_node("control/game_ui/roll_panel/howmuch").set_text(r1 + r2)
 
-func test_lands():
-	shares.assign_share(players[1], 1, shares.find(1))
-	shares.assign_share(players[0], 0.6, shares.find(3))
-	shares.assign_share(players[1], 0.4, shares.find(3))
-
-func _on_generate_pressed():
-	shares.find(1).generate()
-	shares.find(3).generate()
-
-
 func _on_end_turn_pressed():
 	set_game_state(gameStates.ENDTURN)
 
@@ -240,13 +228,30 @@ func _on_land_button_pressed():
 	for c in land_ui.get_node("misc/hbox").get_children():
 		land_ui.get_node("misc/hbox").remove_child(c)
 		c.queue_free()
-	#addind corresponding buttons
-	print(current_land.get_buttons())
+	#adding corresponding buttons
 	if(!current_land.get_buttons().is_empty()):
 		for cb in current_land.get_corresponding_buttons(turn):
-			land_ui.get_node("misc/hbox").add_child(cb)
-
+			var btn : Button = Button.new()
+			btn.set_text(cb.get_text())
+			btn.set_action_mode(0)
+			match(cb.get_text()): #migrate this to a class that handles it
+				"Contest":
+					var land_fa = current_land.get_firearms()
+					var player_fa = players[turn].get_resources()["firearms"]
+					if(player_fa < land_fa):
+						btn.set_disabled(true)
+					btn.pressed.connect(
+						func ():
+							current_land.takeover(players[turn], current_land)
+					)
+				"Purchase":
+					pass
+				"Build":
+					pass
+			#land_ui.get_node("misc/hbox").add_child(cb)
 
 func _on_exit_pressed():
+	panels["land"] = load("res://scenes/land_panel.tscn")
+	panels["land"].position = Vector2(175, 105)
 	var keywords : Array = ["gameplay"]
 	hide_unhide_ui(keywords)

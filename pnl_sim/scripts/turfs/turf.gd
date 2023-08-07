@@ -14,6 +14,7 @@ var buttons : Array
 var square : int
 var price : float
 var resources : Dictionary
+var firearms : int
 
 #shares system
 var land_owner : Player
@@ -40,6 +41,7 @@ func init_default():
 	square = -1
 	resources = {}
 	price = 0
+	firearms = 0
 	
 	#shares
 	land_owner = null
@@ -49,6 +51,9 @@ func init_default():
 	#per turn
 	can_generate = true
 	frozen_turns = 0
+
+func init_general():
+	firearms = self.square * 2
 
 #Setget
 func get_square():
@@ -133,6 +138,15 @@ func set_is_purchased(state : bool):
 
 func get_resources():
 	return self.resources
+
+func get_price():
+	return self.price
+
+func get_firearms():
+	return self.firearms
+
+func set_firearms(fa : int):
+	self.firearms = fa
 
 func set_buttons_generic():
 	var interactions : Array = ["Contest", "Purchase", "Build"]

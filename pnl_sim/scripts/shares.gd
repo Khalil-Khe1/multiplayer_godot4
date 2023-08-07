@@ -9,8 +9,13 @@ func _init():
 	var dir = DirAccess.open(path)
 	for f in dir.get_files():
 		var land_instance = load(path + "/" + f).new()
-		lands.append(land_instance)
+		lands.append(post_instantiate(land_instance))
 	#print(lands)
+
+func post_instantiate(land : Turf) -> Turf:
+	land.set_firearms(land.get_square() * 2)
+	land.set_price(land.get_square() * 2500)
+	return land
 
 func find(square : int):
 	for l in lands:
@@ -40,6 +45,13 @@ func remove_share(player : Player, land : Turf): #TEST THIS
 	for r in land.get_resources():
 		player.deplete_resource(r, land.get_resources()[r] * land.get_owners()[player])
 	land.get_owners().erase(player)
+
+func takeover(player : Player, land : Turf):
+	for k in land.get_resources().keys():
+		for o in land.get_owners().keys():
+			o.deplete_resource(k, land.get_resources()[k] * land.get_owners()[o])
+		player.append_resource(k, land.get_resources()[k])
+	assign_share(player, 1, land)
 
 func list_all() -> Array:
 	return lands

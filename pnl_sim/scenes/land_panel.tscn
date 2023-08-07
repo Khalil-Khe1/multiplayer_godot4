@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=3 uid="uid://crp15itdhnxe"]
+
+[ext_resource type="Texture2D" uid="uid://vekqk0tmouwd" path="res://icon.svg" id="1_k2en0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t6vdv"]
+bg_color = Color(0.955963, 0.955963, 0.955963, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dgp5s"]
+bg_color = Color(0.717647, 0, 0, 1)
+corner_detail = 1
+
+[sub_resource type="SystemFont" id="SystemFont_1qwrg"]
+font_names = PackedStringArray("Cursive")
+font_italic = true
+subpixel_positioning = 0
+
+[sub_resource type="Theme" id="Theme_6gnw4"]
+default_font = SubResource("SystemFont_1qwrg")
+default_font_size = 16
+
+[node name="land_panel" type="Panel"]
+offset_left = 175.0
+offset_top = 105.0
+offset_right = 925.0
+offset_bottom = 505.0
+
+[node name="square" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 33.0
+offset_right = 269.0
+offset_bottom = 353.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_t6vdv")
+
+[node name="color" type="Panel" parent="square"]
+layout_mode = 0
+offset_right = 210.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dgp5s")
+
+[node name="land_title" type="RichTextLabel" parent="square"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 11.0
+offset_right = 153.0
+offset_bottom = 51.0
+scale = Vector2(1.324, 1.324)
+text = "soviet connection"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(164, 223)
+texture = ExtResource("1_k2en0")
+region_enabled = true
+region_rect = Rect2(0, 0, 210, 260)
+
+[node name="misc" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 33.0
+offset_right = 707.0
+offset_bottom = 383.0
+
+[node name="land_vid" type="VideoStreamPlayer" parent="misc"]
+visible = false
+layout_mode = 0
+offset_left = -1.0
+offset_right = 399.0
+offset_bottom = 280.0
+
+[node name="hbox" type="HBoxContainer" parent="misc"]
+layout_mode = 0
+offset_top = 280.0
+offset_right = 400.0
+offset_bottom = 350.0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Button" type="Button" parent="misc/hbox"]
+layout_mode = 2
+text = "Contest"
+
+[node name="Button2" type="Button" parent="misc/hbox"]
+layout_mode = 2
+text = "Purchase"
+
+[node name="description_panel" type="Panel" parent="misc"]
+visible = false
+layout_mode = 0
+offset_top = 1.0
+offset_right = 400.0
+offset_bottom = 351.0
+
+[node name="description" type="RichTextLabel" parent="misc/description_panel"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 27.0
+offset_right = 352.0
+offset_bottom = 147.0
+text = "this land generates x ients-clit per turn
+this land generates x ients-clit per turn"
+
+[node name="exit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 718.0
+offset_right = 748.0
+offset_bottom = 31.0
+text = "X"
+
+[node name="information" type="Button" parent="."]
+layout_mode = 0
+offset_left = 685.0
+offset_right = 715.0
+offset_bottom = 31.0
+theme = SubResource("Theme_6gnw4")
+text = "i"

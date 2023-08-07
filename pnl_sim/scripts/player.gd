@@ -35,6 +35,9 @@ func set_square(s : int):
 func get_square():
 	return self.square
 
+func get_resources():
+	return self.resources
+
 func init_navbar():
 	var navbar = get_tree().get_root().get_node("server/control/game_ui/navbar")
 	for k in resources:
@@ -60,12 +63,12 @@ func update_navbar(res_name : String, value : float):
 	amount = amount + str(value)
 	navbar.get_node(res_name + "/data").set_text(amount)
 
-func append_resource(res_name : String, value : float):
+func append_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] + value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
 
-func deplete_resource(res_name : String, value : float):
+func deplete_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] - value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])

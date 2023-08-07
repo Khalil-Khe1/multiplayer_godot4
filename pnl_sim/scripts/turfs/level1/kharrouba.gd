@@ -7,4 +7,3 @@ func _init():
 	resources = {"ients-clit" : [0, 2]}
 	price = 0
 	color = Color(149, 84, 54)
-	print("KHARROUBA: ", self)
