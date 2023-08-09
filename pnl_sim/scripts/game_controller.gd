@@ -2,8 +2,6 @@ extends Node
 
 enum gameStates {NEWTURN, ROLL, MOVE, ACTION, ENDTURN}
 
-var interactions : Array = ["Purchase"]
-
 const step : float = -0.12
 
 #GAME STATE
@@ -17,18 +15,19 @@ var roll : int
 #UI
 var dice : Array
 var panels : Dictionary
+var default_land_panel
+var videostream : VideoStreamPlayer = VideoStreamPlayer.new()
+var audiostream : AudioStreamPlayer = AudioStreamPlayer.new()
 
-#PLAYERS
+#PLAYERS AND LANDS
 var players : Array
 var shares : Shares
+var repo : InteractionRepo
 
 func increment_turn():
 	turn = turn + 1
 	if(turn >= players.size()):
 		turn = 0
-#		for l in shares.list_all():
-#			l.generate()
-	#GENERATE NEEDS RPC TESTING
 	rpc("sync_turn", turn)
 
 @rpc("any_peer")
@@ -69,6 +68,11 @@ func _input(event):
 func _ready():
 	pass
 
+func _process(delta):
+	if(videostream.visible):
+		if(!videostream.is_playing()):
+			videostream.play()
+
 func ui_init():
 	var server  = self.get_parent()
 	server.get_node("control/lobby").set_visible(false)
@@ -76,10 +80,13 @@ func ui_init():
 	server.get_node("control/game_ui/roll_panel").set_visible(true)
 	server.get_node("control/game_ui/gameplay_panel").set_visible(false)
 	server.get_node("control/game_ui/land_panel").set_visible(false)
+	videostream = server.get_node("control/game_ui/land_panel/misc/land_vid")
+	videostream.set_visible(false)
 
 func load_resources():
 	load_dice()
 	load_lands()
+	load_buttons()
 	load_panels()
 	setup_ui_navbar()
 
@@ -129,9 +136,13 @@ func load_panels():
 	panels["gameplay"] = self.get_parent().get_node("control/game_ui/gameplay_panel")
 	panels["land"] = self.get_parent().get_node("control/game_ui/land_panel")
 	panels["land"].position = Vector2(175, 105)
+	default_land_panel = panels["land"]
 
 func load_lands():
 	shares = load("res://scripts/shares.gd").new()
+
+func load_buttons():
+	repo = load("res://scripts/interaction_repository.gd").new()
 
 func setup_ui_navbar():
 	for p in players:
@@ -141,10 +152,8 @@ func hide_unhide_ui(keywords : Array):
 	for k in panels.keys():
 		if k in keywords:
 			panels[k].set_visible(true)
-			print("ssss")
 		else:
 			panels[k].set_visible(false)
-			print("ddd")
 	print("hide_unhide: ", multiplayer.get_unique_id())
 
 func _on_move_pressed():
@@ -217,12 +226,21 @@ func _on_land_button_pressed():
 	var land_ui = panels["land"]
 	
 	#get and set descriptions
-	land_ui.get_node("square/land_title").set_text(current_land.get_land_name())
+	land_ui.get_node("square/land_title").set_text("[center]" + current_land.get_land_name())
+	#land_ui.get_node("square/land_title").get_theme_color("font_color").default_color = current_land.get_font_color_raw()
+	land_ui.get_node("square/land_title").add_theme_color_override("default_color", current_land.get_font_color_raw())
 	land_ui.get_node("square/color").get_theme_stylebox("panel").bg_color = current_land.get_color_raw()
-	land_ui.get_node("Sprite2D").set_texture(current_land.get_image())
+	land_ui.get_node("Sprite2D").set_texture(current_land.get_image().get_texture())
 	land_ui.get_node("misc/description_panel/description").set_text(current_land.get_description())
-	if(current_land.get_video() != null):
-		land_ui.get_node("misc/land_video").set_stream(current_land.get_video())
+	if(current_land.get_video() != ""):
+		videostream.stream = load(current_land.get_video())
+		videostream.set_visible(true)
+	if(current_land.get_audio() != ""):
+		print("aaaaa")
+		audiostream.stream = load(current_land.get_audio())
+		audiostream.play(0)
+		print(audiostream.get_stream())
+		print(audiostream.is_playing())
 	
 	#initialize by removing children
 	for c in land_ui.get_node("misc/hbox").get_children():
@@ -230,28 +248,15 @@ func _on_land_button_pressed():
 		c.queue_free()
 	#adding corresponding buttons
 	if(!current_land.get_buttons().is_empty()):
-		for cb in current_land.get_corresponding_buttons(turn):
-			var btn : Button = Button.new()
-			btn.set_text(cb.get_text())
-			btn.set_action_mode(0)
-			match(cb.get_text()): #migrate this to a class that handles it
-				"Contest":
-					var land_fa = current_land.get_firearms()
-					var player_fa = players[turn].get_resources()["firearms"]
-					if(player_fa < land_fa):
-						btn.set_disabled(true)
-					btn.pressed.connect(
-						func ():
-							current_land.takeover(players[turn], current_land)
-					)
-				"Purchase":
-					pass
-				"Build":
-					pass
-			#land_ui.get_node("misc/hbox").add_child(cb)
+		for btn_id in current_land.get_corresponding_buttons(turn):
+			if(btn_id == 2)||(btn_id == 3):
+				continue
+			var new_button = repo.find(btn_id)
+			new_button.set_up(players[turn], current_land)
+			land_ui.get_node("misc/hbox").add_child(new_button.get_button())
 
 func _on_exit_pressed():
-	panels["land"] = load("res://scenes/land_panel.tscn")
-	panels["land"].position = Vector2(175, 105)
+	panels["land"] = default_land_panel
+	videostream.set_visible(false)
 	var keywords : Array = ["gameplay"]
 	hide_unhide_ui(keywords)

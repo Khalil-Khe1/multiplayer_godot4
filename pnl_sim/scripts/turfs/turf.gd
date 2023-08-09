@@ -6,9 +6,11 @@ class_name Turf
 var land_name : String
 var description : String
 var color : Color
+var font_color : Color
 var image : Sprite2D
-var video : VideoStream
-var buttons : Array
+var video : String
+var audio : String
+var button_id : Array
 
 #stats
 var square : int
@@ -32,10 +34,12 @@ func init_default():
 	#general
 	land_name = "Turf"
 	generate_description()
-	image = null
-	color = Color.WHITE
-	#video.set_file("")
-	set_buttons_generic()
+	image = Sprite2D.new()
+	color = Color(255, 255, 255, 1)
+	font_color = Color(255, 255, 255, 1)
+	video = ""
+	audio = ""
+	button_id = [1, 2, 3]
 	
 	#stats
 	square = -1
@@ -70,33 +74,50 @@ func get_color_raw():
 	c.a = 1
 	return c
 
+func get_font_color_raw():
+	var c = self.font_color / 255
+	c.a = 1
+	return c
+
+func set_image(path : String):
+	var texture : Texture2D = load(path)
+	self.image.set_texture(texture)
+
 func get_image():
 	return self.image
 
 func get_video():
 	return self.video
 
+func get_audio():
+	return self.audio
+
 func get_buttons():
-	return self.buttons
+	return self.button_id
 
 func get_corresponding_buttons(turn : int):
 	var corr : Array
-	for b in buttons:
-		match(b.get_text()):
-			"Contest":
+	for b in button_id:
+		match(b):
+			1: #Contest
 				if(land_owner != null):
 					if(turn == land_owner.get_order()):
 						continue
-			"Purchase":
+			2: #Purchase
 				if(is_purchased):
 					continue
-			"Build":
+			3: #Build
 				if(land_owner == null):
 					continue
 				if(turn not in self.get_owners_order()):
 					continue
 		corr.append(b)
 	return corr
+
+func set_buttons(btn_id : Array):
+	button_id = []
+	for b in btn_id:
+		button_id.append(b)
 
 func get_description():
 	return self.description
@@ -142,30 +163,14 @@ func get_resources():
 func get_price():
 	return self.price
 
+func set_price(p : int):
+	self.price = p
+
 func get_firearms():
 	return self.firearms
 
 func set_firearms(fa : int):
 	self.firearms = fa
-
-func set_buttons_generic():
-	var interactions : Array = ["Contest", "Purchase", "Build"]
-	for i in interactions:
-		var b = Button.new()
-		b.set_text(i)
-		b.set_action_mode(0)
-		var callable = Callable(self, "_button_pressed")
-		b.pressed.connect(callable.bind(i))
-		buttons.append(b)
-
-func _button_pressed(name : String): #IMPLEMENT INTERACTIONS HERE
-	match(name):
-		"Contest":
-			pass
-		"Purchase":
-			pass
-		"Build":
-			pass
 
 #gameplay functions
 func prepare(): #called before generate

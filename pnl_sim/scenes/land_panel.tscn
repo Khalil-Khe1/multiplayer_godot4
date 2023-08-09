@@ -9,13 +9,13 @@ bg_color = Color(0.955963, 0.955963, 0.955963, 1)
 bg_color = Color(0.717647, 0, 0, 1)
 corner_detail = 1
 
-[sub_resource type="SystemFont" id="SystemFont_1qwrg"]
+[sub_resource type="SystemFont" id="SystemFont_72x18"]
 font_names = PackedStringArray("Cursive")
 font_italic = true
 subpixel_positioning = 0
 
 [sub_resource type="Theme" id="Theme_6gnw4"]
-default_font = SubResource("SystemFont_1qwrg")
+default_font = SubResource("SystemFont_72x18")
 default_font_size = 16
 
 [node name="land_panel" type="Panel"]
