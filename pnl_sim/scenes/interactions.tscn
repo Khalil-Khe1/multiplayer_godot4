@@ -5,28 +5,44 @@ offset_right = 400.0
 offset_bottom = 280.0
 
 [node name="dialog" type="RichTextLabel" parent="."]
-layout_mode = 0
+layout_mode = 2
 offset_right = 400.0
-offset_bottom = 46.0
+offset_bottom = 60.0
 bbcode_enabled = true
 text = "
-[center]Land price: $$2500
-[center]Would you like to purchase the land?"
+[center]aaaa
+"
 fit_content = true
 
 [node name="edit" type="TextEdit" parent="."]
-layout_mode = 0
-offset_left = 118.0
-offset_top = 107.0
-offset_right = 278.0
-offset_bottom = 147.0
+layout_mode = 2
+offset_left = 124.0
+offset_top = 137.0
+offset_right = 274.0
+offset_bottom = 177.0
 theme_override_colors/background_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_placeholder_color = Color(0.607843, 0.607843, 0.607843, 1)
 placeholder_text = "$$ goes here..."
 
 [node name="hbox" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_top = 207.0
+layout_mode = 2
+offset_top = 210.0
 offset_right = 400.0
-offset_bottom = 277.0
+offset_bottom = 280.0
+alignment = 1
+
+[node name="scroll" type="ScrollContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 280.0
+horizontal_scroll_mode = 0
+
+[node name="vbox" type="VBoxContainer" parent="scroll"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="scroll/vbox"]
+layout_mode = 2
+text = "Get land name recieve something per turn"

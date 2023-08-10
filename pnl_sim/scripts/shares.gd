@@ -13,8 +13,9 @@ func _init():
 	#print(lands)
 
 func post_instantiate(land : Turf) -> Turf:
-	land.set_firearms(land.get_square() * 2)
-	land.set_price(land.get_square() * 2500)
+	if(land.get_is_land()):
+		land.set_firearms(land.get_square() * 2)
+		land.set_price(land.get_square() * 2500)
 	return land
 
 func find(square : int):

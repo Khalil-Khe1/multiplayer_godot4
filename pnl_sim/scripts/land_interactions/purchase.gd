@@ -9,11 +9,13 @@ func set_up(player : Player, land : Turf):
 	var land_cm = land.get_price()
 	if(cm < land_cm):
 		self.button.set_disabled(false)
+	parent_node = parent_node.get_parent().get_node("interaction_panel")
 	on_pressed(player, land)
 
 func on_pressed(player : Player, land : Turf):
 	self.button.pressed.connect(
 		func ():
+			free_previous()
 			player.deplete_resource("clean", land.get_price())
 			var shares : Shares = Shares.new()
 			shares.takeover(player, land)

@@ -2,8 +2,6 @@ extends Node
 
 enum gameStates {NEWTURN, ROLL, MOVE, ACTION, ENDTURN}
 
-const step : float = -0.12
-
 #GAME STATE
 var gameState : gameStates
 var turn : int = 0
@@ -33,16 +31,11 @@ func increment_turn():
 @rpc("any_peer")
 func sync_turn(t : int):
 	turn = t
-	print(players)
 	for p in players:
-		print("summit: ", p.get_id())
 		if(multiplayer.get_unique_id() == p.get_id()):
-			print("a ", p.get_order())
 			if(turn == p.get_order()):
-				print(p.get_order())
 				set_game_state(gameStates.NEWTURN)
 				p.print_self()
-	print("sync turn : ", multiplayer.get_unique_id(), " TURN : ", turn)
 
 func set_game_state(value : gameStates):
 	gameState = value
@@ -82,6 +75,7 @@ func ui_init():
 	server.get_node("control/game_ui/land_panel").set_visible(false)
 	videostream = server.get_node("control/game_ui/land_panel/misc/land_vid")
 	videostream.set_visible(false)
+	audiostream = server.get_node("control/game_ui/land_panel/misc/AudioStreamPlayer")
 
 func load_resources():
 	load_dice()
@@ -154,28 +148,13 @@ func hide_unhide_ui(keywords : Array):
 			panels[k].set_visible(true)
 		else:
 			panels[k].set_visible(false)
-	print("hide_unhide: ", multiplayer.get_unique_id())
 
 func _on_move_pressed():
-	var howmuch : int = int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text)
-	if(howmuch == 0):
-		return
-	var s : Vector3 = Vector3(0, 0, 0)
-	for i in howmuch:
-		if(players[turn].get_square() in range(0, 10)):
-			s = Vector3(0, 0, 1)
-		if(players[turn].get_square() in range(10, 20)):
-			s = Vector3(-1, 0, 0)
-		if(players[turn].get_square() in range(20, 30)):
-			s = Vector3(0, 0, -1)
-		if(players[turn].get_square() in range(30, 40)):
-			s = Vector3(1, 0, 0)
-		players[0].position = players[0].position + (s * step)
-		players[turn].set_square(players[turn].get_square() + 1)
-		if(players[turn].get_square() > 39):
-			players[turn].set_square(0)
-		await get_tree().create_timer(0.4).timeout
+	var passed = players[turn].move(int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text))
+	for p in passed:
+		await shares.find(p).on_pass(players[turn], panels["land"])
 	set_game_state(gameStates.ACTION)
+	shares.find(players[turn].get_square()).on_enter(players[turn])
 
 func _on_roll_pressed():
 	var rng = RandomNumberGenerator.new()
@@ -227,7 +206,6 @@ func _on_land_button_pressed():
 	
 	#get and set descriptions
 	land_ui.get_node("square/land_title").set_text("[center]" + current_land.get_land_name())
-	#land_ui.get_node("square/land_title").get_theme_color("font_color").default_color = current_land.get_font_color_raw()
 	land_ui.get_node("square/land_title").add_theme_color_override("default_color", current_land.get_font_color_raw())
 	land_ui.get_node("square/color").get_theme_stylebox("panel").bg_color = current_land.get_color_raw()
 	land_ui.get_node("Sprite2D").set_texture(current_land.get_image().get_texture())
@@ -236,11 +214,8 @@ func _on_land_button_pressed():
 		videostream.stream = load(current_land.get_video())
 		videostream.set_visible(true)
 	if(current_land.get_audio() != ""):
-		print("aaaaa")
 		audiostream.stream = load(current_land.get_audio())
-		audiostream.play(0)
-		print(audiostream.get_stream())
-		print(audiostream.is_playing())
+		audiostream.play(current_land.get_play_at())
 	
 	#initialize by removing children
 	for c in land_ui.get_node("misc/hbox").get_children():
@@ -249,14 +224,12 @@ func _on_land_button_pressed():
 	#adding corresponding buttons
 	if(!current_land.get_buttons().is_empty()):
 		for btn_id in current_land.get_corresponding_buttons(turn):
-			if(btn_id == 2)||(btn_id == 3):
-				continue
-			var new_button = repo.find(btn_id)
-			new_button.set_up(players[turn], current_land)
-			land_ui.get_node("misc/hbox").add_child(new_button.get_button())
+			repo.append_button(repo.find(btn_id), land_ui.get_node("misc/hbox"), players[turn], current_land)
 
 func _on_exit_pressed():
 	panels["land"] = default_land_panel
+	videostream.stream = null
 	videostream.set_visible(false)
+	audiostream.stream = null
 	var keywords : Array = ["gameplay"]
 	hide_unhide_ui(keywords)

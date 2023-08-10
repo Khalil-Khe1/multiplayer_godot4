@@ -10,6 +10,7 @@ var font_color : Color
 var image : Sprite2D
 var video : String
 var audio : String
+var play_at : int
 var button_id : Array
 
 #stats
@@ -17,6 +18,8 @@ var square : int
 var price : float
 var resources : Dictionary
 var firearms : int
+var is_land : bool
+var inventory : Dictionary
 
 #shares system
 var land_owner : Player
@@ -39,6 +42,7 @@ func init_default():
 	font_color = Color(255, 255, 255, 1)
 	video = ""
 	audio = ""
+	play_at = 0
 	button_id = [1, 2, 3]
 	
 	#stats
@@ -46,6 +50,8 @@ func init_default():
 	resources = {}
 	price = 0
 	firearms = 0
+	is_land = true
+	inventory = {}
 	
 	#shares
 	land_owner = null
@@ -62,6 +68,9 @@ func init_general():
 #Setget
 func get_square():
 	return self.square
+
+func get_inventory():
+	return self.inventory
 
 func get_land_name():
 	return self.land_name
@@ -97,27 +106,40 @@ func get_buttons():
 
 func get_corresponding_buttons(turn : int):
 	var corr : Array
-	for b in button_id:
-		match(b):
-			1: #Contest
-				if(land_owner != null):
-					if(turn == land_owner.get_order()):
+	if(is_land):
+		for b in button_id:
+			match(b):
+				1: #Contest
+					if(land_owner != null):
+						if(turn == land_owner.get_order()):
+							continue
+				2: #Purchase
+					if(is_purchased):
 						continue
-			2: #Purchase
-				if(is_purchased):
-					continue
-			3: #Build
-				if(land_owner == null):
-					continue
-				if(turn not in self.get_owners_order()):
-					continue
-		corr.append(b)
+				3: #Build
+					if(land_owner == null):
+						continue
+					if(turn not in self.get_owners_order()):
+						continue
+			corr[b] = button_id[b]
+	else:
+		corr = button_id
 	return corr
 
 func set_buttons(btn_id : Array):
-	button_id = []
-	for b in btn_id:
-		button_id.append(b)
+	self.button_id = btn_id
+
+func set_is_land(b : bool):
+	self.is_land = b
+
+func get_is_land():
+	return self.is_land
+
+func set_play_at(at : int):
+	self.play_at = at
+
+func get_play_at():
+	return self.play_at
 
 func get_description():
 	return self.description
@@ -174,6 +196,12 @@ func set_firearms(fa : int):
 
 #gameplay functions
 func prepare(): #called before generate
+	pass
+
+func on_pass(player : Player, panel : Panel):
+	pass
+
+func on_enter(player : Player):
 	pass
 
 func freeze(turns : int):
