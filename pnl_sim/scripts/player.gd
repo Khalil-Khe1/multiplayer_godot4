@@ -19,6 +19,11 @@ var resources : Dictionary = {
 	"yayo" : 0
 	}
 
+var inventory : Dictionary = {
+	"lands" : [],
+	"cards" : []
+}
+
 func _init():
 	square = 0
 	previous_square = 0
@@ -44,6 +49,9 @@ func get_previous_square():
 
 func get_resources():
 	return self.resources
+
+func append_inventory(category : String, id : int):
+	self.inventory[category].append(id)
 
 func init_resources(): #testing
 	for k in resources.keys():
