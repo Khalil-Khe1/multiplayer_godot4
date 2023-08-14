@@ -19,6 +19,7 @@ var audiostream : AudioStreamPlayer = AudioStreamPlayer.new()
 
 #PLAYERS AND LANDS
 var players : Array
+var npc : Array
 var shares : Shares
 var repo : InteractionRepo
 

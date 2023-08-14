@@ -29,27 +29,41 @@ func find_name(name : String):
 			return l
 
 func assign_share(player : Player, share : float, land : Turf):
+	var previous_share : float = 0
+	for o in land.get_owners().keys():
+		if(o == player):
+			previous_share = land.get_owners()[o]
+			break
+	if(previous_share == 0):
+		land.get_owners().append(player)
+		player.append_inventory("lands", land.get_square())
 	land.get_owners()[player] = share
+	update_resources(player, land, share, previous_share)
 	check_for_ownership(player, share, land)
+	if(share == 0):
+		land.get_owners().erase(player)
+		player.erase_inventory("lands", land.get_square())
 
 func check_for_ownership(player : Player, share : float, land : Turf):
 	if(share >= 0.51):
 		land.set_land_owner(player)
 
 func trade_share(seller : Player, buyer : Player, share : float, land : Turf): #TEST THIS
-	var shares = land.get_owners()
-	shares[seller] = shares[seller] - share
-	shares[buyer] = shares[buyer] + share #check if shares[buyer] = 0 if there is no value
-	#check assigning the shares to a variable registers the update on the land's shares array
+	assign_share(seller, land.get_owners()[seller] - share, land) 
+	print(land.get_owners()[buyer])
+	print(buyer in land.get_owners().keys())
+	if(buyer != null):
+		assign_share(buyer, land.get_owners()[buyer] + share, land) 
 
-func remove_share(player : Player, land : Turf): #TEST THIS
-	for r in land.get_resources():
-		player.deplete_resource(r, land.get_resources()[r] * land.get_owners()[player])
-	land.get_owners().erase(player)
+func update_resources(player: Player, land : Turf, share : float, previous_share : float):
+	for r in land.get_resources().keys():
+		var res = player.get_resources()[r] - land.get_resources()[r] * (share - previous_share)
+		player.set_resource(r, res)
 
 func takeover(player : Player, land : Turf):
 	for k in land.get_resources().keys():
 		for o in land.get_owners().keys():
+			assign_share(o, 0, land)
 			o.deplete_resource(k, land.get_resources()[k] * land.get_owners()[o])
 		player.append_resource(k, land.get_resources()[k])
 	assign_share(player, 1, land)

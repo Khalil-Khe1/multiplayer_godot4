@@ -2,13 +2,17 @@ extends Node
 
 class_name Player
 
+#ID
 var player_id : int
 var player_name : String
 var order : int
+
+#MAP
 var square : int
 var previous_square : int
 var step : float = -0.12
 
+#GAMEPLAY
 var resources : Dictionary = {
 	"ients-clit" : 0, 
 	"rep" : 0, 
@@ -23,6 +27,8 @@ var inventory : Dictionary = {
 	"lands" : [],
 	"cards" : []
 }
+
+var promises : Array
 
 func _init():
 	square = 0
@@ -50,8 +56,17 @@ func get_previous_square():
 func get_resources():
 	return self.resources
 
+func get_inventory():
+	return self.inventory
+
+func get_promises():
+	return self.promises
+
 func append_inventory(category : String, id : int):
 	self.inventory[category].append(id)
+
+func erase_inventory(category : String, id : int):
+	self.inventory[category].erase(id)
 
 func init_resources(): #testing
 	for k in resources.keys():
@@ -82,17 +97,23 @@ func update_navbar(res_name : String, value : float):
 	amount = amount + str(value)
 	navbar.get_node(res_name + "/data").set_text(amount)
 
+func set_resource(res_name : String, value : float):
+	resources[res_name] = value
+	if(player_id == multiplayer.get_unique_id()):
+		update_navbar(res_name, resources[res_name])
+	rpc("sync_resources", res_name, resources[res_name])
+
 func append_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] + value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
-	rpc("sync_resources", res_name, value)
+	rpc("sync_resources", res_name, resources[res_name])
 
 func deplete_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] - value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
-	rpc("sync_resources", res_name, value)
+	rpc("sync_resources", res_name, resources[res_name])
 
 @rpc("any_peer")
 func sync_resource(res_name : String, value : float):
