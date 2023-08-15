@@ -36,7 +36,6 @@ func _init():
 func init_default():
 	#general
 	land_name = "Turf"
-	generate_description()
 	image = Sprite2D.new()
 	color = Color(255, 255, 255, 1)
 	font_color = Color(255, 255, 255, 1)
@@ -61,9 +60,6 @@ func init_default():
 	#per turn
 	can_generate = true
 	frozen_turns = 0
-
-func init_general():
-	firearms = self.square * 2
 
 #Setget
 func get_square():
@@ -121,7 +117,7 @@ func get_corresponding_buttons(turn : int):
 						continue
 					if(turn not in self.get_owners_order()):
 						continue
-			corr[b] = button_id[b]
+			corr.append(button_id[b])
 	else:
 		corr = button_id
 	return corr
@@ -149,8 +145,10 @@ func generate_description():
 	if(!resources.is_empty()):
 		text = "This land generates:\n"
 		for k in resources.keys():
-			text = text + "- " + resources[k][1] + " " + k + "\n"
+			text = text + "- " + str(resources[k][1]) + " " + k + "\n"
 	self.description = text
+	print(text)
+	print("aaa")
 
 func get_land_owner():
 	return self.land_owner

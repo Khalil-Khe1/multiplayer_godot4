@@ -35,6 +35,15 @@ func _init():
 	previous_square = 0
 	init_resources()
 
+func set_player_name(name : String):
+	self.player_name = name
+
+func get_player_name():
+	return self.player_name
+
+func set_id(id : int):
+	self.player_id = id
+
 func get_id():
 	return self.player_id
 
@@ -136,9 +145,9 @@ func move(howmuch : int):
 			s = Vector3(1, 0, 0)
 		self.position = self.position + (s * step)
 		square = square + 1
-		passed.append(square)
 		if(square > 39):
 			square = 0
+		passed.append(square)
 		await get_tree().create_timer(0.4).timeout
 	return passed
 

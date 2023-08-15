@@ -11,7 +11,7 @@ func _init():
 	set_buttons([])
 
 func on_pass(player : Player, panel : Panel):
-	var aux = panel
+	var aux : Panel = panel
 	panel.get_node("exit").set_visible(false)
 	var exit_btn = Button.new()
 	exit_btn.position = panel.get_node("exit").position

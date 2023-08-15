@@ -466,6 +466,27 @@ text = "Contest"
 layout_mode = 2
 text = "Purchase"
 
+[node name="interaction_panel" type="Panel" parent="control/game_ui/land_panel/misc"]
+layout_mode = 0
+offset_top = 1.0
+offset_right = 400.0
+offset_bottom = 281.0
+
+[node name="stats" type="Panel" parent="control/game_ui/land_panel/misc"]
+offset_top = 1.0
+offset_right = 400.0
+offset_bottom = 281.0
+
+[node name="description" type="RichTextLabel" parent="control/game_ui/land_panel/misc/stats"]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 27.0
+offset_right = 352.0
+offset_bottom = 147.0
+text = "land has 1255 firearms
+land has 33665 ients-clit
+3 buildings"
+
 [node name="description_panel" type="Panel" parent="control/game_ui/land_panel/misc"]
 visible = false
 layout_mode = 0
@@ -481,12 +502,6 @@ offset_right = 352.0
 offset_bottom = 147.0
 text = "this land generates x ients-clit per turn
 this land generates x ients-clit per turn"
-
-[node name="interaction_panel" type="Panel" parent="control/game_ui/land_panel/misc"]
-layout_mode = 0
-offset_top = 1.0
-offset_right = 400.0
-offset_bottom = 281.0
 
 [node name="exit" type="Button" parent="control/game_ui/land_panel"]
 layout_mode = 0
@@ -532,3 +547,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010273, 1.75918, 0)
 [connection signal="pressed" from="control/game_ui/gameplay_panel/land_button" to="gamescene" method="_on_land_button_pressed"]
 [connection signal="pressed" from="control/game_ui/gameplay_panel/end_turn" to="gamescene" method="_on_end_turn_pressed"]
 [connection signal="pressed" from="control/game_ui/land_panel/exit" to="gamescene" method="_on_exit_pressed"]
+[connection signal="mouse_entered" from="control/game_ui/land_panel/information" to="gamescene" method="_on_information_mouse_entered"]
+[connection signal="mouse_exited" from="control/game_ui/land_panel/information" to="gamescene" method="_on_information_mouse_exited"]

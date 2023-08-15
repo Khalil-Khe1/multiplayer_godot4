@@ -35,6 +35,9 @@ func declare(type : int, obj : Variant, player : Player):
 			mission.set_description("Raid x")
 	missions.append(mission)
 
+func declare_payout(tier : int):
+	pass
+
 func list(id : int):
 	var res : Array
 	for m in missions:

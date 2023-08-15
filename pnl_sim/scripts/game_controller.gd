@@ -19,7 +19,8 @@ var audiostream : AudioStreamPlayer = AudioStreamPlayer.new()
 
 #PLAYERS AND LANDS
 var players : Array
-var npc : Array
+var npcs : Array
+var cops : Array
 var shares : Shares
 var repo : InteractionRepo
 
@@ -74,6 +75,7 @@ func ui_init():
 	server.get_node("control/game_ui/roll_panel").set_visible(true)
 	server.get_node("control/game_ui/gameplay_panel").set_visible(false)
 	server.get_node("control/game_ui/land_panel").set_visible(false)
+	server.get_node("control/game_ui/land_panel/Sprite2D").set_texture(null)
 	videostream = server.get_node("control/game_ui/land_panel/misc/land_vid")
 	videostream.set_visible(false)
 	audiostream = server.get_node("control/game_ui/land_panel/misc/AudioStreamPlayer")
@@ -95,6 +97,20 @@ func load_players():
 		c.set_order(order)
 		order = order + 1
 		players.append(c)
+
+func load_npcs():
+	var npc : Player = Player.new()
+	npc.set_player_name("CIA")
+	npc.set_id(16)
+	npc.set_order(0)
+	npc.init_resources()
+	npcs.append(npc)
+	npc = Player.new()
+	npc.set_player_name("سعود")
+	npc.set_id(17)
+	npc.set_order(1)
+	npc.init_resources()
+	npcs.append(npc)
 
 func temp_players() -> Dictionary:
 	var tmp_array : Dictionary = {}
@@ -151,11 +167,10 @@ func hide_unhide_ui(keywords : Array):
 			panels[k].set_visible(false)
 
 func _on_move_pressed():
-	var passed = players[turn].move(int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text))
-	for p in passed:
-		await shares.find(p).on_pass(players[turn], panels["land"])
+	var passed = await players[turn].move(int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text))
+#	for p in passed:
+#		await shares.find(p).on_pass(players[turn], panels["land"])
 	set_game_state(gameStates.ACTION)
-	shares.find(players[turn].get_square()).on_enter(players[turn])
 
 func _on_roll_pressed():
 	var rng = RandomNumberGenerator.new()
@@ -209,8 +224,9 @@ func _on_land_button_pressed():
 	land_ui.get_node("square/land_title").set_text("[center]" + current_land.get_land_name())
 	land_ui.get_node("square/land_title").add_theme_color_override("default_color", current_land.get_font_color_raw())
 	land_ui.get_node("square/color").get_theme_stylebox("panel").bg_color = current_land.get_color_raw()
-	land_ui.get_node("Sprite2D").set_texture(current_land.get_image().get_texture())
 	land_ui.get_node("misc/description_panel/description").set_text(current_land.get_description())
+	if(current_land.get_image() != null):
+		land_ui.get_node("Sprite2D").set_texture(current_land.get_image().get_texture())
 	if(current_land.get_video() != ""):
 		videostream.stream = load(current_land.get_video())
 		videostream.set_visible(true)
@@ -234,3 +250,11 @@ func _on_exit_pressed():
 	audiostream.stream = null
 	var keywords : Array = ["gameplay"]
 	hide_unhide_ui(keywords)
+
+
+func _on_information_mouse_entered():
+	panels["land"].get_node("misc/description_panel").set_visible(true)
+
+
+func _on_information_mouse_exited():
+	panels["land"].get_node("misc/description_panel").set_visible(false)

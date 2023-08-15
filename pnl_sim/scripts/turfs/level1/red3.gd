@@ -1,6 +1,7 @@
 extends Turf
 
 func _init():
+	init_default()
 	land_name = "D"
 	square = 24
 	resources = {"firearms" : [0, 30]}

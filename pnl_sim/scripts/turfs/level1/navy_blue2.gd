@@ -1,6 +1,7 @@
 extends Turf
 
 func _init():
+	init_default()
 	land_name = "ris-pas II"
 	square = 39
 	resources = {"ients-clit" : [0, 120]}

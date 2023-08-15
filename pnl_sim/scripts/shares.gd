@@ -10,12 +10,12 @@ func _init():
 	for f in dir.get_files():
 		var land_instance = load(path + "/" + f).new()
 		lands.append(post_instantiate(land_instance))
-	#print(lands)
 
 func post_instantiate(land : Turf) -> Turf:
 	if(land.get_is_land()):
 		land.set_firearms(land.get_square() * 2)
-		land.set_price(land.get_square() * 2500)
+		land.set_price(land.get_square() * 25000)
+		land.generate_description()
 	return land
 
 func find(square : int):
@@ -61,6 +61,7 @@ func update_resources(player: Player, land : Turf, share : float, previous_share
 		player.set_resource(r, res)
 
 func takeover(player : Player, land : Turf):
+	land.set_firearms(0)
 	for k in land.get_resources().keys():
 		for o in land.get_owners().keys():
 			assign_share(o, 0, land)
