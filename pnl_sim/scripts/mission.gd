@@ -6,8 +6,15 @@ var requested : Variant
 var description : String
 var type : int
 var confirm_btn : Button
+var npc : Player
 var player : Player
 var payout : Tradeable
+
+func set_npc(n : Player):
+	self.npc = n
+
+func get_npc():
+	return self.npc
 
 func set_player(p : Player):
 	self.player = p

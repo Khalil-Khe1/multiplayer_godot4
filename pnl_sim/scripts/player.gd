@@ -28,11 +28,15 @@ var inventory : Dictionary = {
 	"cards" : []
 }
 
-var promises : Array
+var promises : Array #Array of tradeables that are to be repaid per turn
+var stars : int
+var is_imprisoned : bool
 
 func _init():
 	square = 0
 	previous_square = 0
+	stars = 0
+	is_imprisoned = false
 	init_resources()
 
 func set_player_name(name : String):
@@ -70,6 +74,18 @@ func get_inventory():
 
 func get_promises():
 	return self.promises
+
+func set_stars(s : int):
+	self.stars = s
+
+func get_stars():
+	return self.stars
+
+func set_is_impirisoned(ii : bool):
+	self.is_imprisoned = ii
+
+func get_is_imprisoned():
+	return self.is_imprisoned
 
 func append_inventory(category : String, id : int):
 	self.inventory[category].append(id)
@@ -127,6 +143,15 @@ func deplete_resource(res_name : String, value : float): #add rpc
 @rpc("any_peer")
 func sync_resource(res_name : String, value : float):
 	resources[res_name] = value
+
+func resource_least() -> String:
+	var key : String
+	var max : float = 10000000
+	for k in resources.keys():
+		if(resources[k] < max):
+			max = resources[k]
+			key = k
+	return key
 
 func move(howmuch : int):
 	var passed : Array
