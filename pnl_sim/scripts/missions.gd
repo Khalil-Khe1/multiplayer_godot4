@@ -58,6 +58,8 @@ func declare(type : int, npc : Player):
 			)
 		2:
 			mission.set_description("Raid x")
+		3: #get card
+			pass
 	missions.append(mission)
 
 func replace_mission(mission : Mission, npc : Player):

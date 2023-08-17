@@ -31,12 +31,14 @@ var inventory : Dictionary = {
 var promises : Array #Array of tradeables that are to be repaid per turn
 var stars : int
 var is_imprisoned : bool
+var is_stunned : bool
 
 func _init():
 	square = 0
 	previous_square = 0
 	stars = 0
 	is_imprisoned = false
+	is_stunned = false
 	init_resources()
 
 func set_player_name(name : String):
@@ -86,6 +88,12 @@ func set_is_impirisoned(ii : bool):
 
 func get_is_imprisoned():
 	return self.is_imprisoned
+
+func set_is_stunned(s : bool):
+	self.is_stunned = s
+
+func get_is_stunned():
+	return self.is_stunned
 
 func append_inventory(category : String, id : int):
 	self.inventory[category].append(id)

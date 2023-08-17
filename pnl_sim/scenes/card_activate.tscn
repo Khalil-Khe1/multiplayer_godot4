@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b2imy6cwobx4f"]
+
+[node name="card_activate" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 350.0
+
+[node name="combo" type="OptionButton" parent="Panel"]
+layout_mode = 2
+offset_left = 102.0
+offset_top = 231.0
+offset_right = 302.0
+offset_bottom = 271.0
+
+[node name="confirm" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 102.0
+offset_top = 291.0
+offset_right = 173.0
+offset_bottom = 322.0
+text = "Confirm"
+
+[node name="exit" type="Button" parent="Panel"]
+offset_left = 229.0
+offset_top = 291.0
+offset_right = 300.0
+offset_bottom = 322.0
+text = "Close"

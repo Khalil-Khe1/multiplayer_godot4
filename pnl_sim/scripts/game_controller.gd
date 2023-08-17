@@ -28,6 +28,8 @@ func increment_turn():
 	turn = turn + 1
 	if(turn >= players.size()):
 		turn = 0
+		for p in players:
+			p.set_is_stunned(false)
 	rpc("sync_turn", turn)
 
 @rpc("any_peer")
@@ -38,6 +40,8 @@ func sync_turn(t : int):
 			if(turn == p.get_order()):
 				set_game_state(gameStates.NEWTURN)
 				p.print_self()
+		if(turn == 0):
+			p.set_is_stunned(false)
 
 func set_game_state(value : gameStates):
 	gameState = value
