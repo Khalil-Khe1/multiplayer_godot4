@@ -13,6 +13,16 @@ layout_mode = 0
 offset_right = 400.0
 offset_bottom = 350.0
 
+[node name="description" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 55.0
+offset_right = 360.0
+offset_bottom = 95.0
+bbcode_enabled = true
+text = "[center]description"
+fit_content = true
+
 [node name="combo" type="OptionButton" parent="Panel"]
 layout_mode = 2
 offset_left = 102.0
@@ -29,6 +39,7 @@ offset_bottom = 322.0
 text = "Confirm"
 
 [node name="exit" type="Button" parent="Panel"]
+layout_mode = 0
 offset_left = 229.0
 offset_top = 291.0
 offset_right = 300.0

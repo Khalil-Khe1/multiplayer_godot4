@@ -10,6 +10,9 @@ var cards #future implementation
 
 var missions : Array
 
+func _init():
+	players = get_node("/root/global").get_players()
+
 @rpc("any_peer")
 func sync(npc_array : Array, missions_array : Array):
 	npcs = npc_array

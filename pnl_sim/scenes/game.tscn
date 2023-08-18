@@ -473,6 +473,7 @@ offset_right = 400.0
 offset_bottom = 281.0
 
 [node name="stats" type="Panel" parent="control/game_ui/land_panel/misc"]
+layout_mode = 0
 offset_top = 1.0
 offset_right = 400.0
 offset_bottom = 281.0

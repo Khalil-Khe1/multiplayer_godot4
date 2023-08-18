@@ -28,8 +28,11 @@ func increment_turn():
 	turn = turn + 1
 	if(turn >= players.size()):
 		turn = 0
-		for p in players:
-			p.set_is_stunned(false)
+	if(players[turn].get_is_stunned()):
+		players[turn].set_is_stunned(false)
+		increment_turn()
+		return
+	set_global_current(players[turn])
 	rpc("sync_turn", turn)
 
 @rpc("any_peer")
@@ -39,9 +42,10 @@ func sync_turn(t : int):
 		if(multiplayer.get_unique_id() == p.get_id()):
 			if(turn == p.get_order()):
 				set_game_state(gameStates.NEWTURN)
+				set_global_current(players[turn])
 				p.print_self()
 		if(turn == 0):
-			p.set_is_stunned(false)
+			pass
 
 func set_game_state(value : gameStates):
 	gameState = value
@@ -61,14 +65,8 @@ func set_game_state(value : gameStates):
 			hide_unhide_ui(keywords)
 			increment_turn()
 
-func _input(event):
-	pass
-
-func _ready():
-	pass
-
 func _process(delta):
-	if(videostream.visible):
+	if(videostream.stream != null):
 		if(!videostream.is_playing()):
 			videostream.play()
 
@@ -95,12 +93,20 @@ func load_resources():
 func rpc_load_resources():
 	load_resources()
 
+func set_global_current(current_player : Player):
+	get_node("/root/global").set_current(current_player)
+
+func set_global():
+	get_node("/root/global").set_players(players)
+	set_global_current(players[0])
+
 func load_players():
 	var order : int = 0
 	for c in self.get_node("Players").get_children():
 		c.set_order(order)
 		order = order + 1
 		players.append(c)
+	set_global()
 
 func load_npcs():
 	var npc : Player = Player.new()
@@ -138,6 +144,7 @@ func sync_players(players_array : Dictionary):
 			if(p.get_id() == rp):
 				p.set_order(players_array[rp])
 				break
+	set_global()
 	for p in players:
 		p.print_self()
 
