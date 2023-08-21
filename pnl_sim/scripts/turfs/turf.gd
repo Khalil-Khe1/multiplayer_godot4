@@ -147,8 +147,6 @@ func generate_description():
 		for k in resources.keys():
 			text = text + "- " + str(resources[k][1]) + " " + k + "\n"
 	self.description = text
-	print(text)
-	print("aaa")
 
 func get_land_owner():
 	return self.land_owner

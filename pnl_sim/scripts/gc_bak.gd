@@ -27,27 +27,24 @@ var repo : InteractionRepo
 
 func increment_turn():
 	turn = turn + 1
-	if(turn >= controller.get_players().size()):
+	if(turn >= players.size()):
 		turn = 0
-	if(controller.find(turn).get_is_stunned()):
-		controller.find(turn).set_is_stunned(false)
+	if(players[turn].get_is_stunned()):
+		players[turn].set_is_stunned(false)
 		increment_turn()
 		return
-	#set_global_current(controller.find(turn))
+	set_global_current(players[turn])
 	rpc("sync_turn", turn)
 
 @rpc("any_peer")
 func sync_turn(t : int):
 	turn = t
-	for p in controller.get_players():
+	for p in players:
 		if(multiplayer.get_unique_id() == p.get_id()):
-			print(p.get_player_name() + " NEW TURN")
-			print(str(turn) + "     " + str(p.get_order()))
 			if(turn == p.get_order()):
 				set_game_state(gameStates.NEWTURN)
-				#set_global_current(controller.find(turn))
+				set_global_current(players[turn])
 				p.print_self()
-				print("SYNC TURN")
 		if(turn == 0):
 			pass
 
@@ -93,8 +90,18 @@ func load_resources():
 	load_panels()
 	setup_ui_navbar()
 
+@rpc("any_peer")
+func rpc_load_resources():
+	load_resources()
+
+func set_global_current(current_player : Player):
+	get_node("/root/global").set_current(current_player)
+
+func set_global():
+	get_node("/root/global").set_players(players)
+	set_global_current(players[0])
+
 func load_players():
-	controller = PlayerController.new()
 	controller.load_players(self.get_node("Players").get_children())
 
 func load_npcs():
@@ -111,25 +118,31 @@ func load_npcs():
 	npc.init_resources()
 	npcs.append(npc)
 
+func temp_players() -> Dictionary:
+	var tmp_array : Dictionary = {}
+	for p in players:
+		tmp_array[p.get_id()] = p.get_order()
+	return tmp_array
+
 func sync_peers_on_init():
-	for p in controller.get_players():
+	var tmp = temp_players()
+	for p in players:
 		if(p.get_id() != 1):
-			rpc_id(p.get_id(), "sync_players", controller.get_order_id())
+			rpc_id(p.get_id(), "sync_players", tmp)
 			rpc_id(p.get_id(), "rpc_load_resources")
 			rpc_id(p.get_id(), "sync_lobby_start_ui")
 
 @rpc("any_peer")
-func rpc_load_resources():
-	load_resources()
-
-@rpc("any_peer")
-func sync_players(order_id : Array):
-	load_players()
-	for p in controller.get_players():
-		for o in order_id.size():
-			if(p.get_id() == order_id[o]):
-				p.set_order(o)
-		#p.print_self()
+func sync_players(players_array : Dictionary):
+	players = self.get_node("Players").get_children()
+	for p in players:
+		for rp in players_array.keys():
+			if(p.get_id() == rp):
+				p.set_order(players_array[rp])
+				break
+	set_global()
+	for p in players:
+		p.print_self()
 
 func load_dice():
 	for i in 6:
@@ -145,12 +158,13 @@ func load_panels():
 
 func load_lands():
 	shares = load("res://scripts/shares.gd").new()
+	#var shares : Shares = Shares.new()
 
 func load_buttons():
 	repo = load("res://scripts/interaction_repository.gd").new()
 
 func setup_ui_navbar():
-	for p in controller.get_players():
+	for p in players:
 		p.init_navbar()
 
 func hide_unhide_ui(keywords : Array):
@@ -162,15 +176,13 @@ func hide_unhide_ui(keywords : Array):
 
 func _on_move_pressed():
 	var roll = int(self.get_parent().get_node("control/game_ui/roll_panel/howmuch").text)
-	if(!controller.find(turn).check_imprisoned(roll)):
-		var passed = await controller.find(turn).move(roll)
+	if(!players[turn].check_imprisoned(roll)):
+		var passed = await players[turn].move(roll)
 #		for p in passed:
-#			await shares.find(p).on_pass(controller.find(turn), panels["land"])
+#			await shares.find(p).on_pass(players[turn], panels["land"])
 	set_game_state(gameStates.ACTION)
 
 func _on_roll_pressed():
-	for p in controller.get_players():
-		p.print_self()
 	var rng = RandomNumberGenerator.new()
 	var r1 : int
 	var r2 : int
@@ -183,30 +195,12 @@ func _on_roll_pressed():
 	self.get_parent().get_node("control/game_ui/roll_panel/howmuch").set_text(str(r1 + r2 + 2))
 
 func _on_start_pressed():
-	load_players()
 	ui_init()
+	load_players()
 	load_resources()
 	sync_peers_on_init()
-	set_names()
-
-func set_names():
-	for p in controller.get_players():
-		rpc_id(p.get_id(), "start_name_sync")
-	var peer : Player = controller.get_players()[0]
-	rpc("sync_names", peer.get_id(), peer.get_player_name())
-
-@rpc("any_peer", "call_local")
-func start_name_sync():
-	rpc("sync_names", multiplayer.get_unique_id(), controller.get_players()[0].get_player_name())
-
-@rpc("any_peer")
-func sync_names(id : int, username : String):
-	print("etner")
-	print(username)
-	for p in controller.get_players():
-		if(p.get_id() == id):
-			print(id)
-			p.set_player_name(username)
+	for p in players:
+		p.print_self()
 
 func set_dice(n : int, roll : int):
 	self.get_parent().get_node("control/game_ui/roll_panel/D" + str(n)).set_texture(dice[roll])
@@ -233,7 +227,7 @@ func _on_land_button_pressed():
 	#declarations
 	var keywords : Array = ["land"]
 	hide_unhide_ui(keywords)
-	var current_land = shares.find(controller.find(turn).get_square())
+	var current_land = shares.find(players[turn].get_square())
 	var land_ui = panels["land"]
 	
 	#get and set descriptions
@@ -257,7 +251,7 @@ func _on_land_button_pressed():
 	#adding corresponding buttons
 	if(!current_land.get_buttons().is_empty()):
 		for btn_id in current_land.get_corresponding_buttons(turn):
-			repo.append_button(repo.find(btn_id), land_ui.get_node("misc/hbox"), controller.find(turn), current_land)
+			repo.append_button(repo.find(btn_id), land_ui.get_node("misc/hbox"), players[turn], current_land)
 
 func _on_exit_pressed():
 	panels["land"] = default_land_panel

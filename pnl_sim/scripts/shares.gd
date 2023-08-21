@@ -4,7 +4,7 @@ class_name Shares #controller for lands/turfs
 
 var lands : Array
 
-func _init():
+func _init(): #init function which is resetting the gameplay objects to default state
 	var path = "res://scripts/turfs/level1"
 	var dir = DirAccess.open(path)
 	for f in dir.get_files():

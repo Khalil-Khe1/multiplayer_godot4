@@ -83,7 +83,7 @@ func set_stars(s : int):
 func get_stars():
 	return self.stars
 
-func set_is_impirisoned(ii : bool):
+func set_is_imprisoned(ii : bool):
 	self.is_imprisoned = ii
 
 func get_is_imprisoned():
@@ -134,19 +134,19 @@ func set_resource(res_name : String, value : float):
 	resources[res_name] = value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
-	rpc("sync_resources", res_name, resources[res_name])
+	rpc("sync_resource", res_name, resources[res_name])
 
 func append_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] + value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
-	rpc("sync_resources", res_name, resources[res_name])
+	rpc("sync_resource", res_name, resources[res_name])
 
 func deplete_resource(res_name : String, value : float): #add rpc
 	resources[res_name] = resources[res_name] - value
 	if(player_id == multiplayer.get_unique_id()):
 		update_navbar(res_name, resources[res_name])
-	rpc("sync_resources", res_name, resources[res_name])
+	rpc("sync_resource", res_name, resources[res_name])
 
 @rpc("any_peer")
 func sync_resource(res_name : String, value : float):
@@ -177,12 +177,33 @@ func move(howmuch : int):
 		if(square in range(30, 40)):
 			s = Vector3(1, 0, 0)
 		self.position = self.position + (s * step)
+		rpc("sync_move", self.position)
 		square = square + 1
 		if(square > 39):
 			square = 0
 		passed.append(square)
 		await get_tree().create_timer(0.4).timeout
 	return passed
+
+func move_to(destination : int):
+	await move((self.square + destination) % 40)
+
+@rpc("any_peer")
+func sync_move(pos : Vector3):
+	self.position = pos
+	
+func check_imprisoned(howmuch : int):
+	if(is_imprisoned):
+		if(howmuch == 12):
+			stars = 0
+			is_imprisoned = false
+		else:
+			stars = stars - 1
+	return is_imprisoned
+	
+
+func turn_start():
+	pass
 
 func print_self():
 	print("ID: ", self.player_id)

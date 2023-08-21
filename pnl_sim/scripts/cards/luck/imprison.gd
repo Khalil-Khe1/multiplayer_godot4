@@ -2,15 +2,15 @@ extends Card
 
 func _init():
 	default_init()
-	id = 1
-	title = "Police Custody"
-	description = "Stun a person for one turn"
-	count = 4
-	tier = 1
+	id = 2
+	title = "Unfair Justice"
+	description = "Send a person to jail"
+	count = 2
+	tier = 2
 
 func on_activate():
 	var scene : Control = load("res://scenes/card_activate.tscn").instantiate()
-	var players : Array = get_node("/root/server/gamescene").players #TEST THIS
+	var players : Array = get_node("/root/global").get_players()
 	scene.get_node("Panel/description").set_text("[center]" + description)
 	for p in players:
 		if(p.get_id() == get_node("/root/global").get_current().get_id()):
@@ -24,10 +24,12 @@ func on_activate():
 				return
 			for p in players:
 				if(p.get_id() == selected):
-					p.set_is_stunned(true)
+					p.move_to(10)
+					p.set_is_imprisoned(true)
 					break
 			scene.get_parent().remove_child(scene)
 			scene.queue_free()
+			
 	)
 	scene.get_node("Panel/exit").set_action_mode(0)
 	scene.get_node("Panel/exit").pressed.connect(
