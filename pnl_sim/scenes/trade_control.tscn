@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cvm0ea5xrv28c"]
+
+[node name="trade_control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 500.0
+
+[node name="player1" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="lands" type="GridContainer" parent="Panel/player1"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 300.0
+
+[node name="cards" type="GridContainer" parent="Panel/player1"]
+offset_top = 300.0
+offset_right = 250.0
+offset_bottom = 500.0
+
+[node name="player2" type="Control" parent="Panel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 550.0
+offset_right = 590.0
+offset_bottom = 40.0
+
+[node name="lands" type="GridContainer" parent="Panel/player2"]
+layout_mode = 0
+offset_right = 250.0
+offset_bottom = 300.0
+
+[node name="cards" type="GridContainer" parent="Panel/player2"]
+offset_top = 300.0
+offset_right = 250.0
+offset_bottom = 500.0

@@ -2,16 +2,14 @@ extends Node
 
 class_name TradeController
 
-var shares : Shares
-
-func process_trade(items : Array):
+func process_trade(items : Array, shares : Shares):
 	for i in items:
 		var item : Tradeable = i
 		if(!check(item)):
 			return
-		trade(item)
+		trade(item, shares)
 
-func trade(item : Tradeable):
+func trade(item : Tradeable, shares : Shares):
 	match(item.get_type()):
 		0:
 			var land : Turf = item.get_object()

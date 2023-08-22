@@ -69,6 +69,9 @@ func set_game_state(value : gameStates):
 			hide_unhide_ui(keywords)
 			increment_turn()
 
+func get_current() -> Player:
+	return controller.get_players()[turn]
+
 func _process(delta):
 	if(videostream.stream != null):
 		if(!videostream.is_playing()):
@@ -266,7 +269,6 @@ func _on_exit_pressed():
 	audiostream.stream = null
 	var keywords : Array = ["gameplay"]
 	hide_unhide_ui(keywords)
-
 
 func _on_information_mouse_entered():
 	panels["land"].get_node("misc/description_panel").set_visible(true)
