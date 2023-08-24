@@ -191,6 +191,11 @@ func _on_start_pressed():
 	load_resources()
 	sync_peers_on_init()
 	set_names()
+	test()
+
+func test():
+	for l in shares.list_all():
+		shares.assign_share(controller.get_players()[0], 1, l)
 
 func set_names():
 	for p in controller.get_players():
@@ -276,3 +281,35 @@ func _on_information_mouse_entered():
 
 func _on_information_mouse_exited():
 	panels["land"].get_node("misc/description_panel").set_visible(false)
+
+
+func _on_inventory_button_pressed():
+	var scene : Control = load("res://scenes/inventory.tscn").instantiate()
+	var parent = get_node("/root/server/control/game_ui")
+	var card = load("res://scenes/land_inv.tscn")
+	var grid : GridContainer = scene.get_node("Panel/scroll_lands/grid")
+	var x = 0.1
+	for l in controller.get_players()[turn].get_inventory()["lands"]:
+		var instance : Control = card.instantiate()
+		var style_box : StyleBoxFlat = StyleBoxFlat.new()
+		style_box.bg_color = shares.find(l).get_color_raw()
+		instance.get_node("Panel").add_theme_stylebox_override("panel", style_box)
+		#instance.get_node("Panel").get_theme_stylebox("panel").bg_color = shares.find(l).get_color_raw()
+		instance.get_node("Panel/square").set_text(str(l))
+		grid.add_child(instance)
+	var close_btn : Button = scene.get_node("Panel/close")
+	close_btn.set_action_mode(0)
+	close_btn.set_text("X")
+	close_btn.pressed.connect(
+		func():
+			for ch in grid.get_children():
+				grid.remove_child(ch)
+				ch.queue_free()
+			parent.remove_child(scene)
+			scene.queue_free()
+	)
+	parent.add_child(scene)
+	for ch in scene.get_node("Panel/scroll_lands/grid").get_children():
+		#ch.get_node("Panel").get_theme_stylebox("panel").bg_color = shares.find(int(ch.get_node("Panel/square").text)).get_color_raw()
+		print(ch.get_node("Panel").get_theme_stylebox("panel").bg_color) #fix color
+		print(Color.GREEN)

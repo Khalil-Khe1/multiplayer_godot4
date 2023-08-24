@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmrts2ptjiqe5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4v4oe"]
+bg_color = Color(0.337255, 0.172549, 0.0823529, 1)
+
+[node name="land_inv" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 60.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_4v4oe")
+
+[node name="square" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_top = 21.0
+offset_right = 60.0
+offset_bottom = 61.0
+theme_override_font_sizes/normal_font_size = 29
+bbcode_enabled = true
+text = "[center]1"

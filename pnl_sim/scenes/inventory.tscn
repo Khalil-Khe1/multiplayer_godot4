@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://ddnciip3ulfn8"]
+
+[node name="inventory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 500.0
+
+[node name="scroll_lands" type="ScrollContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 500.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="grid" type="GridContainer" parent="Panel/scroll_lands"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 80
+theme_override_constants/v_separation = 120
+columns = 6
+
+[node name="scroll_cards" type="ScrollContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 500.0
+offset_right = 800.0
+offset_bottom = 500.0
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/scroll_cards"]
+layout_mode = 2
+
+[node name="close" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 2.0
+offset_right = 798.0
+offset_bottom = 33.0
+text = "X"

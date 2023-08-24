@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cvm0ea5xrv28c"]
 
-[node name="trade_control" type="Control"]
+[node name="trade" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,6 +24,7 @@ offset_right = 250.0
 offset_bottom = 300.0
 
 [node name="cards" type="GridContainer" parent="Panel/player1"]
+layout_mode = 0
 offset_top = 300.0
 offset_right = 250.0
 offset_bottom = 500.0
@@ -41,6 +42,7 @@ offset_right = 250.0
 offset_bottom = 300.0
 
 [node name="cards" type="GridContainer" parent="Panel/player2"]
+layout_mode = 0
 offset_top = 300.0
 offset_right = 250.0
 offset_bottom = 500.0

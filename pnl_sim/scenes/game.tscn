@@ -395,6 +395,14 @@ offset_right = 1117.0
 offset_bottom = 160.0
 text = "END TURN"
 
+[node name="inventory_button" type="Button" parent="control/game_ui/gameplay_panel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 18.0
+offset_right = 132.0
+offset_bottom = 49.0
+text = "wInventory"
+
 [node name="land_panel" type="Panel" parent="control/game_ui"]
 layout_mode = 0
 offset_left = 175.0
@@ -547,6 +555,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.010273, 1.75918, 0)
 [connection signal="pressed" from="control/game_ui/roll_panel/generate" to="gamescene" method="_on_generate_pressed"]
 [connection signal="pressed" from="control/game_ui/gameplay_panel/land_button" to="gamescene" method="_on_land_button_pressed"]
 [connection signal="pressed" from="control/game_ui/gameplay_panel/end_turn" to="gamescene" method="_on_end_turn_pressed"]
+[connection signal="pressed" from="control/game_ui/gameplay_panel/inventory_button" to="gamescene" method="_on_inventory_button_pressed"]
 [connection signal="pressed" from="control/game_ui/land_panel/exit" to="gamescene" method="_on_exit_pressed"]
 [connection signal="mouse_entered" from="control/game_ui/land_panel/information" to="gamescene" method="_on_information_mouse_entered"]
 [connection signal="mouse_exited" from="control/game_ui/land_panel/information" to="gamescene" method="_on_information_mouse_exited"]
