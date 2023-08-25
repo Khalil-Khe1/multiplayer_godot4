@@ -10,22 +10,18 @@ func _init():
 
 func on_activate():
 	var scene : Control = load("res://scenes/card_activate.tscn").instantiate()
-	var players : Array = get_node("/root/server/gamescene").get_players()
+	var shares : Shares = get_node("/root/server/gamescene").get_shares()
 	scene.get_node("Panel/description").set_text("[center]" + description)
-	for p in players:
-		if(p.get_id() == get_node("/root/server/gamescene").get_current().get_id()):
-			continue
-		scene.get_node("Panel/combo").add_item(p.get_player_name(), p.get_id())
+	for l in shares.list_all():
+		var land : Turf = l
+		scene.get_node("Panel/combo").add_item(land.get_title(), land.get_square())
 	scene.get_node("Panel/confirm").set_action_mode(0)
 	scene.get_node("Panel/confirm").pressed.connect(
 		func():
-			var selected = scene.get_node("Panel/combo").get_selected_id()
+			var selected : int = scene.get_node("Panel/combo").get_selected_id()
 			if(selected == -1):
 				return
-			for p in players:
-				if(p.get_id() == selected):
-					p.set_is_stunned(true)
-					break
+			shares.raid(shares.find(selected))
 			scene.get_parent().remove_child(scene)
 			scene.queue_free()
 			

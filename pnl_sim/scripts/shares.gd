@@ -68,6 +68,12 @@ func takeover(player : Player, land : Turf):
 		player.append_resource(k, land.get_resources()[k][0])
 	assign_share(player, 1, land)
 
+func raid(land : Turf):
+	for k in land.get_resources().keys():
+		for o in land.get_owners().keys():
+			assign_share(o, 0, land)
+			o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
+
 func list_all() -> Array:
 	var callable : Callable = Callable(self, "custom_sort")
 	var res = lands

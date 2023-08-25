@@ -72,6 +72,12 @@ func set_game_state(value : gameStates):
 func get_current() -> Player:
 	return controller.get_players()[turn]
 
+func get_players() -> Array:
+	return controller.get_players()
+
+func get_shares() -> Shares:
+	return shares
+
 func _process(delta):
 	if(videostream.stream != null):
 		if(!videostream.is_playing()):

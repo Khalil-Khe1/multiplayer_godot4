@@ -19,7 +19,7 @@ func on_activate():
 	scene.get_node("Panel/confirm").set_action_mode(0)
 	scene.get_node("Panel/confirm").pressed.connect(
 		func():
-			var selected = scene.get_node("Panel/combo").get_selected_id()
+			var selected : int = scene.get_node("Panel/combo").get_selected_id()
 			if(selected == -1):
 				return
 			for p in players:
