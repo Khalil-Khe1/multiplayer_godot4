@@ -15,6 +15,7 @@ offset_bottom = 500.0
 
 [node name="scroll_lands" type="ScrollContainer" parent="Panel"]
 layout_mode = 0
+offset_top = 50.0
 offset_right = 500.0
 offset_bottom = 500.0
 horizontal_scroll_mode = 0
@@ -31,6 +32,7 @@ columns = 6
 [node name="scroll_cards" type="ScrollContainer" parent="Panel"]
 layout_mode = 0
 offset_left = 500.0
+offset_top = 50.0
 offset_right = 800.0
 offset_bottom = 500.0
 horizontal_scroll_mode = 0

@@ -24,6 +24,7 @@ var cops : Array
 var controller : PlayerController
 var shares : Shares
 var repo : InteractionRepo
+var cards : CardRepo
 
 func increment_turn():
 	turn = turn + 1
@@ -97,8 +98,7 @@ func ui_init():
 
 func load_resources():
 	load_dice()
-	load_lands()
-	load_buttons()
+	load_controllers()
 	load_panels()
 	setup_ui_navbar()
 
@@ -152,11 +152,11 @@ func load_panels():
 	panels["land"].position = Vector2(175, 105)
 	default_land_panel = panels["land"]
 
-func load_lands():
-	shares = load("res://scripts/shares.gd").new()
-
-func load_buttons():
-	repo = load("res://scripts/interaction_repository.gd").new()
+func load_controllers():
+	shares = load("res://scripts/shares.gd").new() #lands
+	repo = load("res://scripts/interaction_repository.gd").new() #interactions
+	cards = load("res://scripts/cards/card_repository.gd").new() #cards
+	
 
 func setup_ui_navbar():
 	for p in controller.get_players():
@@ -300,7 +300,6 @@ func _on_inventory_button_pressed():
 		var style_box : StyleBoxFlat = StyleBoxFlat.new()
 		style_box.bg_color = shares.find(l).get_color_raw()
 		instance.get_node("Panel").add_theme_stylebox_override("panel", style_box)
-		#instance.get_node("Panel").get_theme_stylebox("panel").bg_color = shares.find(l).get_color_raw()
 		instance.get_node("Panel/square").set_text(str(l))
 		grid.add_child(instance)
 	var close_btn : Button = scene.get_node("Panel/close")
@@ -314,8 +313,6 @@ func _on_inventory_button_pressed():
 			parent.remove_child(scene)
 			scene.queue_free()
 	)
+	scene.scale = Vector2(0.8, 0.8)
+	scene.position = Vector2(240, 95)
 	parent.add_child(scene)
-	for ch in scene.get_node("Panel/scroll_lands/grid").get_children():
-		#ch.get_node("Panel").get_theme_stylebox("panel").bg_color = shares.find(int(ch.get_node("Panel/square").text)).get_color_raw()
-		print(ch.get_node("Panel").get_theme_stylebox("panel").bg_color) #fix color
-		print(Color.GREEN)

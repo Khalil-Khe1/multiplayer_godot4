@@ -27,3 +27,9 @@ func activate_card(card : Card, player : Player) -> Control:
 		luck_pile.append(card)
 		return scene
 	return null
+
+func card_ui(card : Card) -> Control:
+	var scene : Control = load("res://scenes/card.tscn").instantiate()
+	scene.get_node("panel/title").set_text(card.get_title())
+	scene.get_node("panel/description").set_text(card.get_description())
+	return scene

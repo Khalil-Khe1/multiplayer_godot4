@@ -3,8 +3,8 @@ extends Card
 func _init():
 	default_init()
 	id = 2
-	title = "Unfair Justice"
-	description = "Send a person to jail"
+	title = "unfair justice"
+	description = "Send a person to jail."
 	count = 2
 	tier = 2
 

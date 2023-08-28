@@ -3,7 +3,7 @@ extends Card
 func _init():
 	default_init()
 	id = 1
-	title = "Street Hustling"
+	title = "street hustling"
 	description = "Raid a turf"
 	count = 2
 	tier = 2

@@ -3,8 +3,8 @@ extends Card
 func _init():
 	default_init()
 	id = 1
-	title = "Police Custody"
-	description = "Stun a person for one turn"
+	title = "police custody"
+	description = "stun a person for one turn."
 	count = 4
 	tier = 1
 

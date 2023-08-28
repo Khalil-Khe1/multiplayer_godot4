@@ -404,6 +404,7 @@ offset_bottom = 49.0
 text = "wInventory"
 
 [node name="land_panel" type="Panel" parent="control/game_ui"]
+visible = false
 layout_mode = 0
 offset_left = 175.0
 offset_top = 105.0
