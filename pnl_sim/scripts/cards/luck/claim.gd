@@ -3,14 +3,15 @@ extends Card
 func _init():
 	default_init()
 	id = 1
-	title = "street hustling"
-	description = "raid a turf"
-	count = 2
+	title = "it aint' personal"
+	description = "claim a turf"
+	count = 1
 	tier = 2
 
 func on_activate():
 	var scene : Control = load("res://scenes/card_activate.tscn").instantiate()
 	var shares : Shares = get_node("/root/server/gamescene").get_shares()
+	var current : Player = get_node("/root/server/gamescene").get_current()
 	scene.get_node("Panel/description").set_text("[center]" + description)
 	for l in shares.list_all():
 		var land : Turf = l
@@ -21,7 +22,7 @@ func on_activate():
 			var selected : int = scene.get_node("Panel/combo").get_selected_id()
 			if(selected == -1):
 				return
-			shares.raid(shares.find(selected))
+			shares.takeover(current, shares.find(selected))
 			scene.get_parent().remove_child(scene)
 			scene.queue_free()
 			

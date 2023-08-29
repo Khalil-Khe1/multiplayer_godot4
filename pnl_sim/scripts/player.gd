@@ -28,6 +28,8 @@ var inventory : Dictionary = {
 	"cards" : []
 }
 
+var boost : Dictionary = {}
+
 var promises : Array #Array of tradeables that are to be repaid per turn
 var stars : int
 var is_imprisoned : bool
@@ -82,6 +84,16 @@ func set_stars(s : int):
 
 func get_stars():
 	return self.stars
+
+func append_boost(amount : float, turns : int):
+	self.boost[amount] = self.boost[amount] + turns
+
+func decrement_boost(amount : float):
+	if(self.boost[amount] != 0):
+		self.boost[amount] = self.boost[amount] - 1
+
+func get_boost():
+	return self.boost
 
 func set_is_imprisoned(ii : bool):
 	self.is_imprisoned = ii

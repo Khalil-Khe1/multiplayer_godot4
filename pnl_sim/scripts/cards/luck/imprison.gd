@@ -4,7 +4,7 @@ func _init():
 	default_init()
 	id = 2
 	title = "unfair justice"
-	description = "Send a person to jail."
+	description = "send a person to jail."
 	count = 2
 	tier = 2
 

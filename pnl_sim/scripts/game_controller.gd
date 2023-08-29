@@ -243,11 +243,10 @@ func _on_end_turn_pressed():
 	set_game_state(gameStates.ENDTURN)
 
 
-func _on_land_button_pressed():
+func ui_land(current_land : Turf):
 	#declarations
 	var keywords : Array = ["land"]
 	hide_unhide_ui(keywords)
-	var current_land = shares.find(controller.find(turn).get_square())
 	var land_ui = panels["land"]
 	
 	#get and set descriptions
@@ -273,6 +272,9 @@ func _on_land_button_pressed():
 		for btn_id in current_land.get_corresponding_buttons(turn):
 			repo.append_button(repo.find(btn_id), land_ui.get_node("misc/hbox"), controller.find(turn), current_land)
 
+func _on_land_button_pressed():
+	ui_land(shares.find(controller.find(turn).get_square()))
+
 func _on_exit_pressed():
 	panels["land"] = default_land_panel
 	videostream.stream = null
@@ -287,7 +289,6 @@ func _on_information_mouse_entered():
 
 func _on_information_mouse_exited():
 	panels["land"].get_node("misc/description_panel").set_visible(false)
-
 
 func _on_inventory_button_pressed():
 	var scene : Control = load("res://scenes/inventory.tscn").instantiate()
