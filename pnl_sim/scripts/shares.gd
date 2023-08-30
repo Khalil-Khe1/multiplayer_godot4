@@ -74,6 +74,10 @@ func raid(land : Turf):
 			assign_share(o, 0, land)
 			o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
 
+func purchase(land : Turf, player : Player):
+	takeover(player, land)
+	land.set_is_purchased(true)
+
 func list_all() -> Array:
 	var callable : Callable = Callable(self, "custom_sort")
 	var res = lands

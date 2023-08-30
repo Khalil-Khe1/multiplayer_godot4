@@ -9,5 +9,5 @@ func _init():
 	tier = 3
 
 func on_activate():
-	pass
-	#come back to this when you do contracts
+	var current : Player = get_node("/root/server/gamescene").get_current()
+	current.deplete_stock()

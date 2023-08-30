@@ -28,6 +28,8 @@ var inventory : Dictionary = {
 	"cards" : []
 }
 
+var start : Array #Array of callables
+
 var boost : Dictionary = {}
 
 var promises : Array #Array of tradeables that are to be repaid per turn
@@ -106,6 +108,12 @@ func set_is_stunned(s : bool):
 
 func get_is_stunned():
 	return self.is_stunned
+
+func append_start_callables(callable : Callable):
+	self.start.append(callable)
+
+func erase_start_callables():
+	self.start.clear()
 
 func append_inventory(category : String, id : int):
 	self.inventory[category].append(id)
@@ -214,8 +222,44 @@ func check_imprisoned(howmuch : int):
 	return is_imprisoned
 	
 
+func sell():
+	var f : int = self.resources["ients-clit"]
+	var w : int = self.resources["weed"]
+	var c : int = self.resources["coke"]
+	var weed_price : float
+	var coke_price : float
+	var total_boost : float = 0
+	for k in boost.keys():
+		total_boost = total_boost + k
+	if(f < w):
+		self.resources["weed"] = w - f
+		self.resources["dirty"] = f * weed_price * (total_boost + 1)
+	else:
+		self.resources["weed"] = 0
+		self.resources["dirty"] = w * weed_price * (total_boost + 1)
+	if(f < c):
+		self.resources["coke"] = c - f
+		self.resources["dirty"] = f * coke_price * (total_boost + 1)
+	else:
+		self.resources["coke"] = 0
+		self.resources["dirty"] = c * coke_price * (total_boost + 1)
+
+func deplete_stock():
+	var weed_price : float
+	var coke_price : float
+	var total_boost : float = 0
+	for k in boost.keys():
+		total_boost = total_boost + k
+	self.resources["dirty"] = self.resources["weed"] * weed_price * (total_boost + 1)
+	self.resources["dirty"] = self.resources["coke"] * coke_price * (total_boost + 1)
+	self.resources["weed"] = 0
+	self.resources["coke"] = 0
+
 func turn_start():
-	pass
+	for c in start:
+		var callable : Callable = c
+		callable.call()
+	self.erase_start_callables()
 
 func print_self():
 	print("ID: ", self.player_id)

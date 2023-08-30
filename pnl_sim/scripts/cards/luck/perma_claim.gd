@@ -9,5 +9,27 @@ func _init():
 	tier = 3
 
 func on_activate():
-	pass
-	#come back to this when you do contracts
+	var scene : Control = load("res://scenes/card_activate.tscn").instantiate()
+	var shares : Shares = get_node("/root/server/gamescene").get_shares()
+	scene.get_node("Panel/description").set_text("[center]" + description)
+	for l in shares.list_all():
+		var land : Turf = l
+		scene.get_node("Panel/combo").add_item(land.get_title(), land.get_square())
+	scene.get_node("Panel/confirm").set_action_mode(0)
+	scene.get_node("Panel/confirm").pressed.connect(
+		func():
+			var selected : int = scene.get_node("Panel/combo").get_selected_id()
+			if(selected == -1):
+				return
+			var current : Player = get_node("/root/server/gamescene").get_current()
+			shares.purchase(shares.find(selected), current)
+			scene.get_parent().remove_child(scene)
+			scene.queue_free()
+			
+	)
+	scene.get_node("Panel/exit").set_action_mode(0)
+	scene.get_node("Panel/exit").pressed.connect(
+		func():
+			scene.get_parent().remove_child(scene)
+			scene.queue_free()
+	)
