@@ -10,8 +10,9 @@ var cards #future implementation
 
 var missions : Array
 
-func _init():
-	players = get_node("/root/global").get_players()
+func get_objects():
+	players = get_node("/root/server/gamescene").get_players()
+	shares = get_node("/root/server/gamescene").get_shares()
 
 @rpc("any_peer")
 func sync(npc_array : Array, missions_array : Array):
@@ -26,6 +27,7 @@ func set_npc(npc_array : Array):
 	rpc("sync", npcs, missions)
 
 func declare(type : int, npc : Player):
+	get_objects()
 	var rng = RandomNumberGenerator.new()
 	rng.set_seed(hash(Time.get_ticks_msec() * rng.randi()))
 	var mission : Mission = Mission.new()
@@ -43,8 +45,8 @@ func declare(type : int, npc : Player):
 						return
 					var item : Tradeable
 					item.set_up(req, 0, 1, 0, mission.get_player(), mission.get_npc())
-					trades.trade(item)
-					trades.trade(mission.get_payout())
+					trades.trade(item, shares)
+					trades.trade(mission.get_payout(), shares)
 					replace_mission(mission, npc)
 			)
 		1:
@@ -56,7 +58,7 @@ func declare(type : int, npc : Player):
 				func():
 					if (!req.get_is_imprisoned()):
 						return
-					trades.trade(mission.get_payout())
+					trades.trade(mission.get_payout(), shares)
 					replace_mission(mission, npc)
 			)
 		2:

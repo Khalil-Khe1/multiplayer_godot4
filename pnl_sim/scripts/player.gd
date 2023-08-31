@@ -15,7 +15,6 @@ var step : float = -0.12
 #GAMEPLAY
 var resources : Dictionary = {
 	"ients-clit" : 0, 
-	"rep" : 0, 
 	"firearms" : 0, 
 	"dirty" : 0,
 	"clean" : 0,
@@ -28,12 +27,13 @@ var inventory : Dictionary = {
 	"cards" : []
 }
 
+var contracts : Array
 var start : Array #Array of callables
-
 var boost : Dictionary = {}
-
 var promises : Array #Array of tradeables that are to be repaid per turn
 var stars : int
+var rep : int
+var rank : int #how many reps they have determines rank
 var is_imprisoned : bool
 var is_stunned : bool
 
@@ -87,6 +87,18 @@ func set_stars(s : int):
 func get_stars():
 	return self.stars
 
+func set_rank(r : int):
+	self.rank = r
+
+func get_rank():
+	return self.rank
+
+func set_rep(r : int):
+	self.rep = r
+
+func get_rep():
+	return self.rep
+
 func append_boost(amount : float, turns : int):
 	self.boost[amount] = self.boost[amount] + turns
 
@@ -108,6 +120,20 @@ func set_is_stunned(s : bool):
 
 func get_is_stunned():
 	return self.is_stunned
+
+func append_contract(c : Contract):
+	contracts.append(c)
+
+func erase_contract(c : Contract):
+	contracts.erase(c)
+
+func get_contract(s : int):
+	for c in contracts:
+		if(c.get_square() == s):
+			return c
+
+func get_contracts():
+	return self.contracts
 
 func append_start_callables(callable : Callable):
 	self.start.append(callable)
@@ -256,10 +282,24 @@ func deplete_stock():
 	self.resources["coke"] = 0
 
 func turn_start():
+	check_callables()
+
+func check_callables():
 	for c in start:
 		var callable : Callable = c
 		callable.call()
 	self.erase_start_callables()
+
+func pay_dirty(amount : int):
+	if(amount < self.resources["dirty"]):
+		self.resources["dirty"] = self.resources["dirty"]
+		return true
+	elif(amount < self.resources["dirty"] + self.resources["clean"]):
+		amount = amount - self.resources["dirty"]
+		self.resources["dirty"] = 0
+		self.resources["clean"] = self.resources["clean"] - amount
+		return true
+	return false
 
 func print_self():
 	print("ID: ", self.player_id)

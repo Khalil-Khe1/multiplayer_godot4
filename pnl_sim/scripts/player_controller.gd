@@ -28,8 +28,31 @@ func get_players():
 func find(turn : int):
 	return self.players[turn]
 
+func find_id(id : int):
+	for p in players:
+		if(p.get_id() == id):
+			return p
+
 func get_order_id() -> Array:
 	var order_id : Array
 	for p in players:
 		order_id.append(p.get_id())
 	return order_id
+	
+func set_reputation(id : int, rep : int):
+	var target : Player = find_id(id)
+	target.set_rep(rep)
+	sort_rep()
+
+func sort_rep():
+	var temp : Array = players
+	var callable : Callable = Callable(self, "custom_sort")
+	var rank : int = 1
+	temp.sort_custom(callable)
+	for p in temp:
+		p.set_rank(rank)
+		rank = rank + 1
+
+func custom_sort(a : Player, b : Player):
+	return a.get_rep() < b.get_rep()
+
