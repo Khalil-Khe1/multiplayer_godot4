@@ -2,12 +2,30 @@ extends Node
 
 class_name TradeController
 
+func check_scam(player : Player) -> bool:
+	var m : LeM = get_node("/root/Server/gamescene").get_cards().find_luck(17)
+	if((player.get_inventory()["cards"].has(17))&&(m.get_active())):
+		return true
+	return false
+
+func resolve_scam(scammer : Player):
+	if(scammer != null):
+		var card_repo : CardRepo = get_node("/root/Server/gamescene").get_cards()
+		var m : LeM = card_repo.find(17)
+		m.set_active(false)
+		card_repo.erase_card(scammer, card_repo.find(17))
+
 func process_trade(items : Array, shares : Shares):
+	var scammer : Player = null
 	for i in items:
 		var item : Tradeable = i
 		if(!check(item)):
 			return
+		if(check_scam(item.get_trader())):
+			scammer = item.get_trader()
+			continue
 		trade(item, shares)
+	resolve_scam(scammer)
 
 func trade(item : Tradeable, shares : Shares):
 	match(item.get_type()):

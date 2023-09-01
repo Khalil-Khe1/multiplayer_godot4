@@ -1,23 +1,21 @@
 extends Card
 
-var copies : int = 0
-
 func _init():
 	default_init()
-	id = 1
+	id = 16
 	title = "arms race"
 	description = "generate (x)*25 arms per turn (avec x nombre de copies de cette carte)"
 	count = 4
 	tier = 2
+	is_passive = true
 
 func on_activate():
-	var current : Player = get_node("/root/server/gamescene").get_current()
-	for i in current.get_inventory()["cards"]:
-		if(i == 16):
-			copies = copies + 1
-	var callable : Callable = Callable(self, "generate_arms")
-	callable.bind(player)
-	player.append_start_callables(callable)
+	pass
 
-func generate_arms(player : Player):
-	player.append_resource("arms", 25 * copies)
+func on_passive():
+	for p in get_node("/root/server/gamescene").get_players():
+		var copies : int = 0
+		for i in p.get_inventory()["cards"]:
+			if(i == 16):
+				copies = copies + 1
+		p.append_resource("arms", 25 * copies)

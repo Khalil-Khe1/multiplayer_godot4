@@ -30,6 +30,14 @@ offset_top = 231.0
 offset_right = 302.0
 offset_bottom = 271.0
 
+[node name="input" type="TextEdit" parent="Panel"]
+visible = false
+layout_mode = 0
+offset_left = 102.0
+offset_top = 231.0
+offset_right = 302.0
+offset_bottom = 271.0
+
 [node name="confirm" type="Button" parent="Panel"]
 layout_mode = 0
 offset_left = 102.0

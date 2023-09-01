@@ -79,6 +79,9 @@ func get_players() -> Array:
 func get_shares() -> Shares:
 	return shares
 
+func get_cards() -> CardRepo:
+	return cards
+
 func _process(delta):
 	if(videostream.stream != null):
 		if(!videostream.is_playing()):

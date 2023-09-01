@@ -9,6 +9,7 @@ var count : int
 var tier : int
 var is_ethereal : bool
 var is_passive : bool
+var is_taken : bool
 var player : Player
 
 func _init():
@@ -21,6 +22,7 @@ func default_init():
 	tier = 1
 	is_ethereal = false
 	is_passive = false
+	is_taken = false
 
 func set_id(i : int):
 	self.id = i
@@ -63,6 +65,12 @@ func set_passive(p : bool):
 
 func get_passive():
 	return self.passive
+
+func set_taken(t : bool):
+	self.is_taken = t
+
+func get_taken():
+	return self.is_taken
 
 func set_player(p : Player):
 	self.player = p
