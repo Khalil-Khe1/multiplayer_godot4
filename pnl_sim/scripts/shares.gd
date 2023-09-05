@@ -40,8 +40,11 @@ func assign_share(player : Player, share : float, land : Turf):
 	update_resources(player, land, share, previous_share)
 	check_for_ownership(player, share, land)
 	if(share == 0):
+		land.on_dismiss()
 		land.get_owners().erase(player)
 		player.erase_inventory("lands", land.get_square())
+		return
+		land.on_acquire()
 
 func check_for_ownership(player : Player, share : float, land : Turf):
 	if(share >= 0.51):
@@ -63,16 +66,16 @@ func takeover(player : Player, land : Turf):
 	land.set_firearms(0)
 	for k in land.get_resources().keys():
 		for o in land.get_owners().keys():
+			#o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
 			assign_share(o, 0, land)
-			o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
-		player.append_resource(k, land.get_resources()[k][0])
+		#player.append_resource(k, land.get_resources()[k][0])
 	assign_share(player, 1, land)
 
 func raid(land : Turf):
 	for k in land.get_resources().keys():
 		for o in land.get_owners().keys():
+			#o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
 			assign_share(o, 0, land)
-			o.deplete_resource(k, land.get_resources()[k][0] * land.get_owners()[o])
 
 func purchase(land : Turf, player : Player):
 	takeover(player, land)

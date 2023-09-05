@@ -194,10 +194,16 @@ func set_firearms(fa : int):
 func prepare(): #called before generate
 	pass
 
-func on_pass(player : Player, panel : Panel):
+func on_pass():
 	pass
 
-func on_enter(player : Player):
+func on_enter():
+	pass
+
+func on_acquire(): #treating on acquire after the fact the land has been assigned an owner
+	pass
+
+func on_dismiss(): #treating on dismiss before erasing the land's owner
 	pass
 
 func freeze(turns : int):

@@ -42,4 +42,26 @@ func append_card(player : Player, card : Card):
 func erase_card(player : Player, card : Card):
 	player.get_inventory()["cards"].erase(card.get_id())
 	card.set_taken(false)
-	
+
+func draw_luck() -> Card:
+	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = generate_seed()
+	if(!luck_pile_drawable()):
+		return null
+	while(true):
+		var card : Card = luck_pile[rng.randi_range(1, luck_pile.size())]
+		if(!card.get_taken()):
+			card.set_taken(true)
+			return card
+	return null
+
+func luck_pile_drawable() -> bool:
+	for c in luck_pile:
+		var card : Card = c
+		if(!card.get_taken()):
+			return true
+	return false
+
+func generate_seed():
+	var seed = str(Time.get_ticks_msec()) + str(multiplayer.get_unique_id())
+	return hash(seed)

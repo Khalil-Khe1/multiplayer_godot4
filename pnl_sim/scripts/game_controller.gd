@@ -1,5 +1,7 @@
 extends Node
 
+class_name GameController
+
 enum gameStates {NEWTURN, ROLL, MOVE, ACTION, ENDTURN}
 
 #GAME STATE
@@ -81,6 +83,9 @@ func get_shares() -> Shares:
 
 func get_cards() -> CardRepo:
 	return cards
+
+func get_panel(panel_name : String) -> Panel:
+	return panels[panel_name]
 
 func _process(delta):
 	if(videostream.stream != null):

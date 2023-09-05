@@ -10,7 +10,9 @@ func _init():
 	set_image("res://resources/squares/irs.png")
 	set_buttons([])
 
-func on_enter(player : Player):
+func on_enter():
+	var gc : GameController = get_node("/root/Server/gamescene")
+	var player : Player = gc.get_current()
 	var dm = player.get_resources()["dirty"]
 	var cm = player.get_resources()["clean"]
 	var df : float = 0.2

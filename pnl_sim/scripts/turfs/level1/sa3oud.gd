@@ -10,7 +10,10 @@ func _init():
 	set_image("res://resources/squares/sa3oud.png")
 	set_buttons([])
 
-func on_pass(player : Player, panel : Panel):
+func on_pass():
+	var gc : GameController = get_node("/root/Server/gamescene")
+	var player : Player = gc.get_current()
+	var panel : Panel = gc.get_panel("land")
 	var aux : Panel = panel
 	panel.get_node("exit").set_visible(false)
 	var exit_btn = Button.new()
